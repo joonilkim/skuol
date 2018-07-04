@@ -1,0 +1,15 @@
+.DS_Store
+TODO.md
+Thumbs.db
+logs
+tmp
+pids
+*.log
+*.pid
+*.swp
+.sass-cache
+.env
+node_modules/
+examples/**/__dist__
+tests/unit/coverage/
+tests/e2e/reports
