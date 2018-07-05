@@ -4,14 +4,6 @@ import App from './app'
 import { nextTick } from './helpers'
 
 
-beforeEach(() => {
-  document.body.innerHTML = '<html><head></head><body></body></html>'
-})
-
-afterEach(() => {
-})
-
-
 test('should support className', function(){
   const className = 'test'
 
@@ -28,6 +20,7 @@ test('should render', function(){
     {id: 1, name: 'Listening Music'}
   ]
 
+  document.body.innerHTML = '<html><head></head><body></body></html>'
   const body = document.querySelector('body')
   body.appendChild(new Todos({data}).el)
 

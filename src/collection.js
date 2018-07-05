@@ -23,12 +23,17 @@ export default function({
   id='id',
   comparator=defaultComparator,
   oncreate=Function(),
-  ondestroy=Function()
+  ondestroy=Function(),
+  onrender=(_=>_),
 }={}){
 
-  assert(process.env.NODE_ENV !== 'production' &&
-      typeof component === 'function', 
-      `required argument: ${component}`)
+  if(process.env.NODE_ENV !== 'production'){
+    assert(typeof component === 'function',
+        `required argument: ${component}`)
+
+    assert(typeof onrender === 'function',
+        `onrender expects function type, but ${typeof onrender}`)
+  }
 
   is = is || function(model){
     this.model.length === model.length &&
@@ -91,7 +96,7 @@ export default function({
       //empty(this.el)
       //this.el.appendChild(df)
 
-      return components
+      return onrender(components)
     }
   })
 

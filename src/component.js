@@ -1,5 +1,6 @@
 import { shallowEqual } from './utils'
 
+
 /**
  * @param {Object|Array} components
  */
@@ -24,12 +25,10 @@ export default function({
   className,
   is,
   options={},
-  onrender,
   oncreate=Function(),
-  ondestroy=Function()
+  ondestroy=Function(),
+  onrender=(_=>_)
 }={}){
-
-  onrender = onrender || function(_){ return _ }
 
   /**
    * @param {Object} data a initial data
