@@ -16,9 +16,9 @@ function sweepGarbages(components){
  * @param {String} tagName
  * @param {String} className
  * @param {Function} is
- * @param {Function} onrender
  * @param {Function} oncreate
  * @param {Function} ondestroy
+ * @param {Function} onrender
  */
 export default function({
   tagName='p',
