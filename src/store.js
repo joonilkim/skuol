@@ -19,12 +19,10 @@ export default function({
       return
     }
 
-    const subs = this._subs
-
-    if(subs.indexOf(fn) < 0) subs.push(fn) 
+    if(this._subs.indexOf(fn) < 0) this._subs.push(fn) 
     return () => {
-      const i = subs.indexOf(fn)
-      if(i >= 0) subs.splice(i, 1)
+      const i = this._subs.indexOf(fn)
+      if(i >= 0) this._subs.splice(i, 1)
     }
   }
 

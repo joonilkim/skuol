@@ -12,15 +12,17 @@ export default function({
   return function(Component, store){
 
     const BoundComponent = function(){
+
       const unsub = store.subscribe((state) => {
         this.update(select.call(this, state))
       })
-
+      // this should be created before onrender is called
       this.$store = store
-
-      this.ondestroy = merge(unsub, this.ondestroy)
-
+      
       Component.apply(this, arguments)
+
+      // call this after this.destroy is created
+      this.destroy = merge(unsub, this.destroy)
     }
     BoundComponent.prototype = Object.create(Component.prototype)
     BoundComponent.prototype.constructor = BoundComponent

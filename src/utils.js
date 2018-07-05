@@ -25,7 +25,9 @@ export function deepClone(obj){
 
 export function merge(...fns){
   return function(){
-    fns.forEach(fn => fn.apply(this, arguments))
+    fns
+      .filter(fn => !!fn)
+      .forEach(fn => fn.apply(this, arguments))
   }
 }
 

@@ -27,7 +27,7 @@ export default function({
   ondestroy=Function()
 }={}){
 
-  onrender = onrender || function(comps){ return comps }
+  onrender = onrender || function(_){ return _ }
 
   /**
    * @param {Object} data a initial data
