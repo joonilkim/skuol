@@ -14,6 +14,7 @@ function defaultComparator(a, b){
  * @param {Function} comparator A comparator for sorting
  * @param {Function} oncreate
  * @param {Function} ondestroy
+ * @param {Function} onrender
  */
 export default function({
   tagName,
