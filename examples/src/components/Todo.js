@@ -2,7 +2,7 @@ import Skuol from 'skuol'
 import store from '../store'
 
 export default Skuol.createComponent({
-  tag: 'li',
+  tagName: 'li',
   onrender(components){
     this.el.innerHTML = `
       <strong>${this.model.name}</strong>

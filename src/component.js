@@ -12,14 +12,14 @@ function sweepGarbages(components){
 }
 
 /**
- * @param {String} tag
+ * @param {String} tagName
  * @param {Function} is
  * @param {Function} onrender
  * @param {Function} onstate
  * @param {Function} ondestroy
  */
 export default function({
-  tag='div',
+  tagName='p',
   is,
   options={},
   onrender,
@@ -43,7 +43,7 @@ export default function({
       })
     }
 
-    this.el = document.createElement(tag)
+    this.el = document.createElement(tagName)
     this.model = data
     this._components = {}
     this.is = is || function(model){ return shallowEqual(this.model, model) }

@@ -3,6 +3,7 @@ import store from '../store'
 import Todo from './Todo'
 
 const Todos = Skuol.createCollection({
+  tagName: 'ul',
   component(data){
     return new Todo({data})
   },
