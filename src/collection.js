@@ -6,14 +6,18 @@ function defaultComparator(a, b){
 }
 
 /**
- * @param {String} tagName An element tagName. defaults to ul
+ * @param {String} tagName
+ * @param {String} className
  * @param {Function} is
  * @param {Function} component A function to return item instance
  * @param {String} id An unique key of item
  * @param {Function} comparator A comparator for sorting
+ * @param {Function} oncreate
+ * @param {Function} ondestroy
  */
 export default function({
   tagName,
+  className,
   is,
   component,
   id='id',
@@ -40,6 +44,7 @@ export default function({
 
   return createComponent({
     tagName,
+    className,
     is,
     oncreate,
     ondestroy,

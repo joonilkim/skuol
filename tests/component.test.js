@@ -1,3 +1,4 @@
+import Skuol from '../src'
 import Todos from './app/Todos'
 import App from './app'
 import { nextTick } from './helpers'
@@ -8,6 +9,16 @@ beforeEach(() => {
 })
 
 afterEach(() => {
+})
+
+
+test('should support className', function(){
+  const className = 'test'
+
+  const Comp = Skuol.createComponent({ className })
+
+  const comp = new Comp()
+  expect(comp.el.className).toEqual(className)
 })
 
 
