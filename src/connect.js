@@ -19,7 +19,10 @@ export default function({
       // this should be created before onrender is called
       this.$store = store
       
-      Component.apply(this, arguments)
+      // set initial this.model from select(state)
+      // this lets boundComponent to ignore data property
+      const args = {...arguments[0], data: select.call(this, store.state) }
+      Component.call(this, args)
 
       // call this after this.destroy is created
       this.destroy = merge(unsub, this.destroy)
