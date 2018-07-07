@@ -4,13 +4,16 @@ import { nextTick, deepClone } from './utils'
  * @param {Object} state
  * @param {Object} actions
  * @param {Object} mutations
+ * @param {Function} filter A post processor which runs before notify
  */
 export default function({
   state={},
   actions={},
-  mutations={}
+  mutations={},
+  filter=(_=>_)
 }={}){
 
+  state = Object.seal(state)  // prevents property insert/delete
   this._subs = []
 
   this.subscribe = (fn) => { 
@@ -26,36 +29,39 @@ export default function({
     }
   }
 
+  let stateCache = null
+  let isStateDirty = true
+
   Object.defineProperties(this, {
     state: {
       get(){ 
-        if(process.env.NODE_ENV === 'production') return state 
-
-        // 외부에서 state 변경 막음
-        // 성능을 위해 production에서는 사용하지 않음
-        return Object.freeze(deepClone(state))
+        if(isStateDirty) {
+          stateCache = filter(state)
+          isStateDirty = false
+        }
+        return stateCache
       }
     }
   })
 
-  const self = this
   this.dispatch = function(name, val){
     if(name in actions) {
-      actions[name].call(this, this, val)
-    } else if( name in mutations) {
-      self.commit.call(this, name, val)
+      actions[name].call(this, { commit }, val)
+    } else if(name in mutations) {
+      commit.call(this, name, val)
     } else {
       console.error(`${name} is not defined in actions or mutations`)
     }
   }
 
-  this.commit = function(name, val){
+  const commit = (name, val) => {
     if(name in mutations){
       mutations[name].call(this, state, val)
     } else {
       console.error(`${name} is not defined in mutations`)
     }
 
+    isStateDirty = true
     notifyToSubscribers()
   }
 
@@ -66,8 +72,7 @@ export default function({
 
     scheduled = nextTick(() => {
       scheduled = null
-      const frozenState = this.state
-      this._subs.forEach(sub => sub(frozenState))
+      this._subs.forEach(sub => sub(this.state))
     })
   }
 

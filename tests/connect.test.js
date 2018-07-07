@@ -15,14 +15,21 @@ test('should inject $store', async function(){
 
 
 test('should change store\'s subscriptions', async function(){
-  const store = new Skuol.Store({})
+  const store = new Skuol.Store({
+    state: {},
+    mutations: {
+      test(){}
+    }
+  })
   const Comp = new Skuol.createComponent({})
   const BoundComp = Skuol.connect()(Comp, store)
 
   const comp = new BoundComp()
   expect(store._subs.length).toBe(1)
 
-  comp.destroy()
+  store.dispatch('test')
+  await nextTick(100)
+
   expect(store._subs.length).toBe(0)
 })
 
@@ -33,13 +40,12 @@ test('should call lifecycle callbacks', async function(){
   const store = new Skuol.Store({})
   const Comp = new Skuol.createComponent({
     oncreate(){ callbacks.push('created') },
-    ondestroy(){ callbacks.push('destroyed') },
-    onrender(_){ callbacks.push('rendered'); return _ }
+    onrender(){ callbacks.push('rendered') }
   })
   const BoundComp = Skuol.connect()(Comp, store)
 
-  new BoundComp().destroy()
-  expect(callbacks).toEqual(['created', 'rendered', 'destroyed'])
+  new BoundComp()
+  expect(callbacks).toEqual(['created', 'rendered'])
 })
 
 

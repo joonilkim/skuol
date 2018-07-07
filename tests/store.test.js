@@ -3,8 +3,6 @@ import Skuol from '../src'
 beforeEach(() => {
 })
 
-
-
 afterEach(() => {
 })
 

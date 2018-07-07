@@ -1,4 +1,10 @@
-import { merge } from './utils'
+import { monkeypatch } from './utils'
+
+const unmounted = function(el){
+  while(el.parentNode)
+    el = el.parentNode
+  return el !== document
+}
 
 /**
  * Connects Component and store. Every state changes propagate to component instance.
@@ -17,7 +23,11 @@ export default function({
     const BoundComponent = function(){
 
       const unsub = store.subscribe((state) => {
-        this.update(select.call(this, state))
+        if(unmounted(this.el)){
+          unsub()
+        } else {
+          this.update(select.call(this, state))
+        }
       })
       // this should be created before onrender is called
       this.$store = store
@@ -29,9 +39,6 @@ export default function({
         data: select.call(this, store.state) 
       }
       Component.call(this, args)
-
-      // call this after this.destroy is created
-      this.destroy = merge(unsub, this.destroy)
     }
     BoundComponent.prototype = Object.create(Component.prototype)
     BoundComponent.prototype.constructor = BoundComponent

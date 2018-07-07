@@ -1,4 +1,4 @@
-import { assert, empty, shallowEqual, merge } from './utils'
+import { assert, empty, shallowEqual, monkeypatch } from './utils'
 import createComponent from './component'
 
 function defaultComparator(a, b){
@@ -13,7 +13,6 @@ function defaultComparator(a, b){
  * @param {String} id An unique key of item
  * @param {Function} comparator A comparator for sorting
  * @param {Function} oncreate
- * @param {Function} ondestroy
  * @param {Function} onrender
  */
 export default function({
@@ -24,8 +23,7 @@ export default function({
   id='id',
   comparator=defaultComparator,
   oncreate=Function(),
-  ondestroy=Function(),
-  onrender=(_=>_),
+  onrender=Function()
 }={}){
 
   if(process.env.NODE_ENV !== 'production'){
@@ -33,16 +31,16 @@ export default function({
         `required argument: ${component}`)
 
     assert(typeof onrender === 'function',
-        `onrender expects function type, but ${typeof onrender}`)
+        `expected function, but got ${typeof onrender}`)
   }
 
   is = is || function(model){
     this.model.length === model.length &&
-    this.model.forEach(
-      (m, i) => shallowEqual(m, model[i]))
+    this.model.findIndex(
+      (m, i) => !shallowEqual(m, model[i])) < 0
   }
 
-  oncreate = merge(function(){
+  oncreate = monkeypatch(function(){
     // init this.model if no data is provided
     this.model = Array.isArray(this.model) ? this.model : []
     this._components = []
@@ -53,8 +51,7 @@ export default function({
     className,
     is,
     oncreate,
-    ondestroy,
-    onrender(components){
+    onrender(){
 
       if(!Array.isArray(this.model)) {
         console.error(`expected array, but ${typeof this.model}`)
@@ -64,19 +61,22 @@ export default function({
 
       const createComponent = (data) => {
         const comp = component(data)
-        comp.el.dataset.id = data[id]
+        if(typeof data === 'object' && id in data) 
+          comp.el.dataset.id = data[id]
+        else
+          console.warn(`required ${id} property`)
         return comp
       }
 
       const upsert = (data) => {
         // data sync안된경우 id 없을 수 있음
         // update안됐을 수 있기 때문에 component.is(data)로 찾으면 안됨
-        const c = components.find(c => c.model[id] === data[id])
+        const c = this._components.find(c => c.model[id] === data[id])
         if(!c) return createComponent(data)  // inserted
         if(!c.is(data)) c.update(data)     // updated
         return c
       }
-      components = this.model.map(upsert)
+      const components = this.model.map(upsert)
 
       components.forEach((c,i) => {
         const child = this.el.children[i]
@@ -87,17 +87,17 @@ export default function({
         }
       })
 
+      // remove redundants
       while(this.el.children.length > components.length) {
         this.el.removeChild(this.el.lastChild)
       }
+      this._components
+        .filter(c => !c.el.parentNode)
+        .forEach(c => c.destroy)
 
-      //const df = document.createDocumentFragment()
-      //components.forEach(c => df.appendChild(c.el))
+      this._components = components
 
-      //empty(this.el)
-      //this.el.appendChild(df)
-
-      return onrender(components)
+      onrender()
     }
   })
 

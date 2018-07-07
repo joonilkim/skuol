@@ -23,7 +23,7 @@ export function deepClone(obj){
   return JSON.parse(JSON.stringify(obj));
 }
 
-export function merge(...fns){
+export function monkeypatch(...fns){
   return function(){
     fns
       .filter(fn => !!fn)
@@ -31,4 +31,18 @@ export function merge(...fns){
   }
 }
 
+/**
+ * @param {Object|Array} obj
+ */
+export function filterObject(obj, fn){
+  if(Array.isArray(obj)){
+    return obj.filter(fn)
+  } else {
+    return Object.keys(obj)
+      .filter(fn)
+      .reduce((o, k) => (
+        {...o, [k]: obj[k]}
+      ), {})
+  }
+}
 

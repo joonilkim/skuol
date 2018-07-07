@@ -1,15 +1,35 @@
-import { shallowEqual } from './utils'
+import { shallowEqual, filterObject } from './utils'
 
 
 /**
  * @param {Object|Array} components
  */
-function sweepGarbages(components){
-  Object.keys(components).forEach(k => {
-    const c = components[k]
-    if(c.el.parentNode) return
-    c.destroy()
-  })
+function handleOrphans(components){
+  Object.values(components)
+    .filter(c => !c.el.parentNode)
+    .forEach(c => c.destroy())
+}
+
+/**
+ * @param {Object|Array} components
+ */
+function destroyChildren(){
+  const list = this._components
+  Object.values(list)
+    .filter(c => !!c)
+    .forEach(c => c.destroy())
+}
+
+
+function unlinkParent(parentComponent){
+  const list = parentComponent._components
+  if(Array.isArray(list)){
+    const i = list.indexOf(this)
+    if(i >= 0) list.splice(i, 1)
+  } else if(typeof list === 'object') {
+    const key = Object.keys(list).find(k => list[k] === this)
+    if(key) delete list[key]
+  }
 }
 
 /**
@@ -17,17 +37,16 @@ function sweepGarbages(components){
  * @param {String} className
  * @param {Function} is
  * @param {Function} oncreate
- * @param {Function} ondestroy
  * @param {Function} onrender
+ * (components: {Object|Array}) => components
+ * That component will be released if it's el is unmounted.
  */
 export default function({
-  tagName='p',
+  tagName='div',
   className,
   is,
-  options={},
   oncreate=Function(),
-  ondestroy=Function(),
-  onrender=(_=>_)
+  onrender=Function()
 }={}){
 
   /**
@@ -45,29 +64,28 @@ export default function({
     }
 
     this.el = document.createElement(tagName)
-    this.el.className = className
+    if(className) this.el.className = className
     this.model = data
-    this._components = {}
     this.is = is || function(model){ return shallowEqual(this.model, model) }
+
+    const render = onrender.bind(this)
 
     this.update = (newModel) => {
       const old = this.model
       this.model = newModel
       if(this.is(old)) return  // no change
-
-      const exists = this._components
-      this._components = onrender.call(this, exists)
-      sweepGarbages(exists)
+      render()
     }
 
+    // There're 2 ways to destroy component. 
+    // component.destroy() or onrender: component.el.removeChild(child.el)
     this.destroy = () => {
       if(this.el.parentNode) 
         this.el.parentNode.removeChild(this.el)
-      ondestroy.call(this)
     }
 
     oncreate.call(this)
-    this._components = onrender.call(this, this._components)
+    render()
 
   }
 

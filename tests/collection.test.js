@@ -7,11 +7,29 @@ test('should call lifecycle callbacks', function(){
   const Comp = new Skuol.createCollection({
     component(){ return null },
     oncreate(){ callbacks.push('created') },
-    ondestroy(){ callbacks.push('destroyed') },
-    onrender(_){ callbacks.push('rendered'); return _ }
+    onrender(){ callbacks.push('rendered') }
   })
 
-  new Comp().destroy()
-  expect(callbacks).toEqual(['created', 'rendered', 'destroyed'])
+  new Comp()
+  expect(callbacks).toEqual(['created', 'rendered'])
 })
+
+
+test('should release its children', function(){
+  const Child = Skuol.createComponent()
+  const Comp = Skuol.createCollection({
+    component(data){
+      return new Child({data})
+    }
+  })
+
+  const comp = new Comp({data: [1, 2]})
+  expect(Object.keys(comp._components).length).toBe(2)
+
+  comp.update([])
+  expect(comp.el.children.length).toBe(0)
+  expect(Object.keys(comp._components).length).toBe(0)
+})
+
+
 
