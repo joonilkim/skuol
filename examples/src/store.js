@@ -40,27 +40,29 @@ export default new Skuol.Store({
       state.cards = state.cards.filter(t => t.id !== card.id)
     }
   },
-  filter(state){
-    const actives = new Set(state.activeAssignee)
-    const hasAssignee = (card) => (
-      !actives.size ||
-      card.assignee.findIndex(a => actives.has(a)) >= 0
-    )
+  filters: [
+    (state) => {
+      const actives = new Set(state.activeAssignee)
+      const hasAssignee = (card) => (
+        !actives.size ||
+        card.assignee.findIndex(a => actives.has(a)) >= 0
+      )
 
-    // all assignee
-    const names = state.cards.reduce((y, c) =>
-      [...y, ...c.assignee]
-    , [])
-    const assignee = [...new Set(names)]
-      .sort(strcmp)
-      .map(name => ({name, active: actives.has(name)}))
+      // all assignee
+      const names = state.cards.reduce((y, c) =>
+        [...y, ...c.assignee]
+      , [])
+      const assignee = [...new Set(names)]
+        .sort(strcmp)
+        .map(name => ({name, active: actives.has(name)}))
 
-    return {
-      ...state,
-      assignee,
-      activeCards: state.cards.filter(hasAssignee)
+      return {
+        ...state,
+        assignee,
+        activeCards: state.cards.filter(hasAssignee)
+      }
     }
-  }
+  ]
 })
 
 

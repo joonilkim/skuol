@@ -1,4 +1,4 @@
-import { nextTick, deepClone } from './utils'
+import { nextTick, deepClone, shallowClone, deepFreeze } from './utils'
 
 /**
  * @param {Object} state
@@ -10,7 +10,7 @@ export default function({
   state={},
   actions={},
   mutations={},
-  filter=(_=>_)
+  filters=[]
 }={}){
 
   state = Object.seal(state)  // prevents property insert/delete
@@ -35,8 +35,13 @@ export default function({
   Object.defineProperties(this, {
     state: {
       get(){ 
+        // state를 외부에서 수정할 경우, 강제로 error발생케 하기 위해 freeze
+        const copy = process.env.NODE_ENV === 'production' ? 
+            shallowClone : deepFreeze(deepClone)
+
         if(isStateDirty) {
-          stateCache = filter(state)
+          stateCache = filters.reduce(
+            (s, fn) => fn(s), copy(state))
           isStateDirty = false
         }
         return stateCache

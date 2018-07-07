@@ -23,6 +23,19 @@ export function deepClone(obj){
   return JSON.parse(JSON.stringify(obj));
 }
 
+export function shallowClone(o){
+  if(typeof o !== 'object') return o
+  return Array.isArray(o) ? [...o] : {...o}
+}
+
+export function deepFreeze(o){
+  Object.freeze(o)
+  Object.keys(o).forEach(k => {
+    if(typeof o[k] === 'object') deepFreeze(o[k])
+  })
+  return o
+}
+
 export function monkeypatch(...fns){
   return function(){
     fns
