@@ -45,16 +45,13 @@ export default Skuol.createComponent({
       this.destroy()
     }
 
-    this.el.querySelector('.modal-window')
-        .addEventListener('click', (e) => e.stopPropagation())
+    this.el.querySelector('.modal-window').onclick = (e) => e.stopPropagation()
 
-    this.el.addEventListener('click', destroy)
+    this.el.onclick = destroy
 
-    this.el.querySelector('#editor-cancel')
-        .addEventListener('click', destroy)
+    this.el.querySelector('#editor-cancel').onclick = destroy
 
-    this.el.querySelector('#editor-ok')
-        .addEventListener('click', (e) => {
+    this.el.querySelector('#editor-ok').onclick = (e) => {
       e.preventDefault()  // to prevent form warnings
 
       store.dispatch('addTodo', {
@@ -64,7 +61,7 @@ export default Skuol.createComponent({
       })
 
       this.destroy()
-    })
+    }
 
   }
 })

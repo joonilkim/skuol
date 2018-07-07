@@ -1,4 +1,6 @@
 import Skuol from 'skuol'
+import store from '../store'
+import { TODO, INPROGRESS, DONE } from '../store'
 import TodoList from './TodoList'
 import InProgressList from './InProgressList'
 import DoneList from './DoneList'
@@ -37,10 +39,9 @@ export default Skuol.createComponent({
     this.el.querySelector('#app-inprogress').appendChild(new InProgressList().el)
     this.el.querySelector('#app-done').appendChild(new DoneList().el)
 
-    this.el.querySelector('#app-create-issue')
-        .addEventListener('click', () => {
+    this.el.querySelector('#app-create-issue').onclick = () => {
       document.body.appendChild(new CardEditor().el)
-    })
+    }
 
   }
 })

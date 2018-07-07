@@ -20,4 +20,7 @@ export function shallowArrayEqual(a, b){
       a.findIndex((m, i) => !shallowEqual(m, b[i])) < 0
 }
 
-
+/* not implemented yet */
+export function escape(s){ 
+  return s
+}

@@ -38,6 +38,10 @@ export default new Skuol.Store({
     },
     removeCard(state, card) {
       state.cards = state.cards.filter(t => t.id !== card.id)
+    },
+    moveCard(state, cardId, status) {
+      const toMove = state.cards.find(c => c.id == cardId)
+      toMove.status = status
     }
   },
   filters: [

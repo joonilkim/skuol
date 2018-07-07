@@ -1,6 +1,6 @@
 import Skuol from 'skuol'
 import store from '../store'
-import { shallowArrayEqual } from '../utils'
+import { shallowArrayEqual, escape } from '../utils'
 
 const Filter = Skuol.createComponent({
   tagName: 'ul',
@@ -8,7 +8,7 @@ const Filter = Skuol.createComponent({
   is(model){
     return shallowArrayEqual(this.model, model)
   },
-  onrender(){
+  onrender({ setActiveAssignee }){
     const createChild = function(data){
       const el = document.createElement('li')
       el.className = 'filter-item'
@@ -18,10 +18,10 @@ const Filter = Skuol.createComponent({
             name='assignee[]'
             value='${data.name}'
             ${data.active ? 'checked' : ''}>
-          ${data.name}
+          ${escape(data.name)}
         </label>
       `
-      el.querySelector('[type=checkbox]').addEventListener('click', onclick)
+      el.querySelector('[type=checkbox]').onclick = onclick
       return el
     }
 
@@ -29,7 +29,7 @@ const Filter = Skuol.createComponent({
       e.preventDefault()
       const names = [...this.el.querySelectorAll('[name="assignee[]"]:checked')]
           .map(el => el.value)
-      store.dispatch('setActiveAssignee', names)
+      setActiveAssignee(names)
     }
 
     while(this.el.firstChild) 
@@ -42,7 +42,8 @@ const Filter = Skuol.createComponent({
 })
 
 export default Skuol.connect({
-  select(state){
-    return state.assignee
-  }
+  select: state => ( state.assignee ),
+  storeToProps: ({dispatch}) => ({
+    setActiveAssignee: names => dispatch('setActiveAssignee', names)
+  })
 })(Filter, store)

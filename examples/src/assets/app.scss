@@ -18,9 +18,16 @@ $border: 2px solid #444;
   > fieldset {
     float:left;
     width:calc((100% - 20px * 2)/3);
-    min-height:200px;
     margin:0;
     border:$border;
+
+    .cards {
+      min-height:200px;
+    }
+
+    .cards.active {
+      background-color:#eee;
+    }
   }
 
   > fieldset + fieldset {
@@ -33,6 +40,7 @@ $border: 2px solid #444;
   margin:15px 0;
   padding:.5em;
   border: $border;
+  background-color:#fff;
 
   .card-del {
     position:absolute;
@@ -55,6 +63,10 @@ $border: 2px solid #444;
       margin:.5em 0;
     }
   }
+}
+
+.card.active{
+  margin-top:200px;
 }
 
 .filter {
