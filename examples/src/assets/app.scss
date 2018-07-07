@@ -1,8 +1,94 @@
-* {
-  box-sizing:border-box;
+
+/* reset */
+
+* { box-sizing:border-box; }
+html, body { margin:0; }
+aside, main { padding:1em; }
+ul { list-style-type:none; margin:0; padding:0; }
+dd { margin:0; }
+
+
+/* components */
+
+$border: 2px solid #444;
+
+.app-lists {
+  overflow:hidden;
+
+  > fieldset {
+    float:left;
+    width:calc((100% - 20px * 2)/3);
+    min-height:200px;
+    margin:0;
+    border:$border;
+  }
+
+  > fieldset + fieldset {
+    margin-left:20px;
+  }
 }
 
-html {
+.card {
+  position:relative;
+  margin:15px 0;
+  padding:.5em;
+  border: $border;
+
+  .card-del {
+    position:absolute;
+    top:.5em;
+    right:.5em;
+    padding:.5em;
+  }
+
+  .card-item {
+    > dt {
+      display:inline-block;
+      width:150px;
+      vertical-align:top;
+    }
+    > dd {
+      display:inline-block;
+      width:calc(100% - 160px);
+    }
+    > * {
+      margin:.5em 0;
+    }
+  }
 }
 
+.filter {
+  .filter-item {
+    display:inline-block;
+  }
+  .filter-item + .filter-item{
+    margin-left:20px;
+  }
+}
+
+.modal-bg{
+  position:fixed;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  overflow-x:hidden;
+  overflow-y:auto;
+  z-index:1000;
+}
+
+.modal-window{
+  width:480px;
+  margin:200px auto;
+  padding:15px;
+  background-color:white;
+  border:$border;
+
+  input, textarea {
+    width:calc(100% - 150px);
+  }
+  textarea {
+    resize:none;
+  }
+}
 

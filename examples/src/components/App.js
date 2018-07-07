@@ -1,32 +1,46 @@
 import Skuol from 'skuol'
-import store from '../store'
-import Todos from './Todos'
+import TodoList from './TodoList'
+import InProgressList from './InProgressList'
+import DoneList from './DoneList'
+import CardEditor from './CardEditor'
+import Filter from './Filter'
 
 export default Skuol.createComponent({
-  onrender(components){
+  onrender(){
     this.el.innerHTML = `
+      <aside>
+        <fieldset id='app-filter'>
+          <legend>Filter</legend>
+        </fieldset>
+      </aside>
+
       <main>
-        <div><!-- jsdom doesnt support form -->
-          <fieldset>
-            <label for='name'>Name:</label>
-            <input id='name' name='name'>
+        <p><button id='app-create-issue'>Create Issue</button></p>
+
+        <section class='app-lists'>
+          <fieldset id='app-todo'>
+            <legend>To Do</legend>
           </fieldset>
-          <button>Submit</button>
-        </div>
-        <div id='todos'>
-        </div>
+          <fieldset id='app-inprogress'>
+            <legend>In Progress</legend>
+          </fieldset>
+          <fieldset id='app-done'>
+            <legend>Done</legend>
+          </fieldset>
+        </section>
       </main>
     `
-    components.todos = components.todos || new Todos()
 
-    const todos = this.el.querySelector('#todos')
-    todos.appendChild(components.todos.el)
+    this.el.querySelector('#app-filter').appendChild(new Filter().el)
 
-    this.el.querySelector('button').addEventListener('click', () => {
-      const name = this.el.querySelector('input[name=name]').value
-      store.dispatch('addTodo', name)
+    this.el.querySelector('#app-todo').appendChild(new TodoList().el)
+    this.el.querySelector('#app-inprogress').appendChild(new InProgressList().el)
+    this.el.querySelector('#app-done').appendChild(new DoneList().el)
+
+    this.el.querySelector('#app-create-issue')
+        .addEventListener('click', () => {
+      document.body.appendChild(new CardEditor().el)
     })
 
-    return components
   }
 })
