@@ -38,8 +38,8 @@ function unlinkParent(parentComponent){
  * @param {Function} is
  * @param {Function} oncreate
  * @param {Function} onrender
- * (components: {Object|Array}) => components
- * That component will be released if it's el is unmounted.
+ * This function can be called multiple times. So use this.el.onclick() instead of 
+ * this.el.addEventListener() in onrender or attach those events in oncreate
  */
 export default function({
   tagName='div',
@@ -51,17 +51,18 @@ export default function({
 
   /**
    * @param {Object} data a initial data
+   * @param {Object} props Properties to pass to onrender
    */
   return function({
     data={},
-    $props
+    props={}
   }={}){
 
-    if($props) {
-      Object.keys($props).forEach(k => {
-        Object.defineProperty(this, '$'+k, {value: $props[k]})
-      })
-    }
+    //if($props) {
+    //  Object.keys($props).forEach(k => {
+    //    Object.defineProperty(this, '$'+k, {value: $props[k]})
+    //  })
+    //}
 
     this.el = document.createElement(tagName)
     if(className) this.el.className = className
@@ -74,7 +75,7 @@ export default function({
       const old = this.model
       this.model = newModel
       if(this.is(old)) return  // no change
-      render()
+      render(props)
     }
 
     // There're 2 ways to destroy component. 
@@ -84,8 +85,8 @@ export default function({
         this.el.parentNode.removeChild(this.el)
     }
 
-    oncreate.call(this)
-    render()
+    oncreate.call(this, props)
+    render(props)
 
   }
 

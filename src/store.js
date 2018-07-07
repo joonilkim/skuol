@@ -49,25 +49,32 @@ export default function({
     }
   })
 
-  this.dispatch = function(name, val){
+  this.dispatch = function(...args){
+    const name = args[0]
+
     if(name in actions) {
-      actions[name].call(this, { commit }, val)
+      actions[name].apply(this, [{ commit }, ...args.slice(1)])
     } else if(name in mutations) {
-      commit.call(this, name, val)
+      commit.apply(this, args)
     } else {
       console.error(`${name} is not defined in actions or mutations`)
     }
   }
 
-  const commit = (name, val) => {
+  const commit = function(...args){
+    const name = args[0]
+
     if(name in mutations){
-      mutations[name].call(this, state, val)
+      mutations[name].apply(this, [state, ...args.slice(1)])
     } else {
       console.error(`${name} is not defined in mutations`)
     }
 
     isStateDirty = true
     notifyToSubscribers()
+
+    if(process.env.NODE_ENV !== 'production')
+      console.debug('state', state)
   }
 
   let scheduled = null

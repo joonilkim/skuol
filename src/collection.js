@@ -51,7 +51,7 @@ export default function({
     className,
     is,
     oncreate,
-    onrender(){
+    onrender(props){
 
       if(!Array.isArray(this.model)) {
         console.error(`expected array, but ${typeof this.model}`)
@@ -97,7 +97,7 @@ export default function({
 
       this._components = components
 
-      onrender()
+      onrender(props)
     }
   })
 

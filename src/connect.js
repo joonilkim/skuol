@@ -10,10 +10,13 @@ const unmounted = function(el){
  * Connects Component and store. Every state changes propagate to component instance.
  * Ignores component's data property. Initial component.model is select(store.state)
  *
- * @param {Function} select A function which transform state to props
+ * @param {Function} select A function which transform state to this.model
+ * @param {Function} storeToProps A function which returns props of onrender
+ * ({state, dispatch}) => {}
  */
 export default function({
-  select 
+  select,
+  storeToProps=(_=>{})
 }={}){
 
   select = select || function(){ return this.model }
@@ -32,11 +35,20 @@ export default function({
       // this should be created before onrender is called
       this.$store = store
       
+      // build onrender props from storeToProps
+      const params = arguments[0] || {}
+      const props  = {
+        ...(params.props || {}),
+        dispatch: store.dispatch,
+        ...storeToProps(store)
+      }
+
       // set initial this.model from select(state)
       // this lets boundComponent to ignore data property
       const args = {
-        ...(arguments[0] || {}), 
-        data: select.call(this, store.state) 
+        ...params, 
+        data: select.call(this, store.state),
+        props
       }
       Component.call(this, args)
     }
