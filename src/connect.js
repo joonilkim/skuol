@@ -7,7 +7,7 @@ const unmounted = function(el){
 }
 
 /**
- * Connects Component and store. Every state changes propagate to component instance.
+ * Connects Component and store. Every state changes propagate to component instances.
  * Ignores component's data property. Initial component.model is select(store.state)
  *
  * @param {Function} select A function which transform state to this.model
