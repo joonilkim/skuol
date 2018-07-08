@@ -28,7 +28,7 @@ export default Skuol.createComponent({
     this.el.ondragstart = (e) => {
       e.dataTransfer.setData('text/plain', this.model.id)
       e.dataTransfer.dropEffect = 'move'
-      e.currentTarget.classList.add('dragging')
+      this.el.classList.add('dragging')
     }
 
     this.el.ondragend = (e) => {

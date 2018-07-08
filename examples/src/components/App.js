@@ -8,7 +8,7 @@ import CardEditor from './CardEditor'
 import Filter from './Filter'
 
 export default Skuol.createComponent({
-  onrender(){
+  oncreate(){
     this.el.innerHTML = `
       <aside>
         <fieldset id='app-filter'>

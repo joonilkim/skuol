@@ -11,16 +11,15 @@ export default Skuol.createComponent({
       document.body.style.overflow = 'auto'
       destroy.call(this)
     }
-  },
-  onrender(){
+
     this.el.innerHTML = `
       <div class='modal-window'>
-        <form>
+        <form id='editor-form'>
           <h2>New Issue</h2>
           <section>
             <p class='_oh'>
-              <label for='editor-title'>Title</label>
-              <input id='editor-title' class='_fr'>
+              <label for='editor-title'>Title<abbr>*</abbr></label>
+              <input id='editor-title' class='_fr' required>
             </p>
             <p class='_oh'>
               <label for='editor-desc'>Description</label>
@@ -28,37 +27,38 @@ export default Skuol.createComponent({
                 rows='5'></textarea>
             </p>
             <p class='_oh'>
-              <label for='editor-assignee'>Assignee</label>
-              <input id='editor-assignee' class='_fr'>
+              <label for='editor-assignee'>Assignee<abbr>*</abbr></label>
+              <input id='editor-assignee' class='_fr' required>
             </p>
           </section>
           <p>
-            <button id='editor-ok'>Ok</button>
+            <button id='editor-ok' type='submit'>Ok</button>
             <button id='editor-cancel'>Cancel</button>
           </p>
         </form>
       </div>
     `
 
-    const destroy = (e) => {
+    const ondestroy = (e) => {
       e.preventDefault()  // to prevent form warnings
       this.destroy()
     }
 
     this.el.querySelector('.modal-window').onclick = (e) => e.stopPropagation()
 
-    this.el.onclick = destroy
+    this.el.onclick = ondestroy
 
-    this.el.querySelector('#editor-cancel').onclick = destroy
+    this.el.querySelector('#editor-cancel').onclick = ondestroy
 
-    this.el.querySelector('#editor-ok').onclick = (e) => {
-      e.preventDefault()  // to prevent form warnings
+    this.el.querySelector('#editor-form').onsubmit = (e) => {
+      e.preventDefault()
 
-      store.dispatch('addTodo', {
+      const card = {
         title: this.el.querySelector('#editor-title').value,
         description: this.el.querySelector('#editor-desc').value,
         assignee: this.el.querySelector('#editor-assignee').value
-      })
+      }
+      store.dispatch('addTodo', card)
 
       this.destroy()
     }

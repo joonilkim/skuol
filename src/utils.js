@@ -3,7 +3,8 @@ export function empty(el){
 }
 
 export function shallowEqual(o1, o2){
-  if(typeof o1 !== 'object' || typeof o2 !== 'object')
+  if(o1 == null || o2 == null ||
+      typeof o1 !== 'object' || typeof o2 !== 'object')
     return o1 === o2
 
   const [k1, k2] = [Object.keys(o1), Object.keys(o2)]

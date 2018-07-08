@@ -12,16 +12,25 @@ export {
   DONE
 }
 
+const filterAssignee = function(cards, activeNames){
+  const names = cards.reduce((y, c) =>
+      [...y, ...c.assignee]
+    , [])
+  return [...new Set(names)]
+    .sort(strcmp)
+    .map(name => ({name, active: activeNames.has(name)}))
+}
+
 export default new Skuol.Store({
   // 무결성을 해치지 않는 독립적인 데이터만 state에
-  // 나머지는 filter에서 후처리
   state: {
     cardSerial: 0,
     cards: [],
-    activeAssignee: []
+    assignee: []
   },
   /* actions can be omitted */
   mutations: {
+
     addTodo(state, todo){
       const id = state.cardSerial++
       const card = {
@@ -29,44 +38,35 @@ export default new Skuol.Store({
         id, 
         sortKey: Date.now(), 
         status: TODO,
-        assignee: todo.assignee.split(',').map(x => x.trim())
+        assignee: [...new Set(todo.assignee.split(',').map(x => x.trim()))]
       }
       state.cards = [...state.cards, card]
+
+      const activeNames = state.assignee
+        .filter(a => a.active)
+        .map(a => a.name)
+      state.assignee = filterAssignee(state.cards, new Set(activeNames))
     },
+
     setActiveAssignee(state, assignee){
-      state.activeAssignee = assignee
+      state.assignee = filterAssignee(state.cards, new Set(assignee))
     },
+
     removeCard(state, card) {
       state.cards = state.cards.filter(t => t.id !== card.id)
+
+      const activeNames = state.assignee
+        .filter(a => a.active)
+        .map(a => a.name)
+      state.assignee = filterAssignee(state.cards, new Set(activeNames))
     },
+
     moveCard(state, cardId, status) {
       const toMove = state.cards.find(c => c.id == cardId)
       toMove.status = status
     }
-  },
-  filters: [
-    (state) => {
-      const actives = new Set(state.activeAssignee)
-      const hasAssignee = (card) => (
-        !actives.size ||
-        card.assignee.findIndex(a => actives.has(a)) >= 0
-      )
 
-      // all assignee
-      const names = state.cards.reduce((y, c) =>
-        [...y, ...c.assignee]
-      , [])
-      const assignee = [...new Set(names)]
-        .sort(strcmp)
-        .map(name => ({name, active: actives.has(name)}))
-
-      return {
-        ...state,
-        assignee,
-        activeCards: state.cards.filter(hasAssignee)
-      }
-    }
-  ]
+  }
 })
 
 

@@ -1,18 +1,27 @@
-import { nextTick, deepClone, shallowClone, deepFreeze } from './utils'
+import { 
+  monkeypatch,
+  nextTick, 
+  deepClone, 
+  shallowClone, 
+  deepFreeze
+} from './utils'
+
+
+// state를 외부에서 수정할 경우, 강제로 error발생케 하기 위해 freeze
+const copy = process.env.NODE_ENV === 'production' ? 
+    ( (o) => Object.freeze(shallowClone(o)) ) :
+    ( (o) => deepFreeze(deepClone(o)) )
+
 
 /**
  * @param {Object} state
  * @param {Object} actions
  * @param {Object} mutations
- * @param {Function} filters A list of processors which creates a new exposed state.
- * filters are applied to the internal state lazily when it requested by store.state or
- * subscriber.onstate(). A processor's signature is (state) => newState
  */
 export default function({
   state={},
   actions={},
-  mutations={},
-  filters=[]
+  mutations={}
 }={}){
 
   state = Object.seal(state)  // prevents property insert/delete
@@ -37,13 +46,8 @@ export default function({
   Object.defineProperties(this, {
     state: {
       get(){ 
-        // state를 외부에서 수정할 경우, 강제로 error발생케 하기 위해 freeze
-        const copy = process.env.NODE_ENV === 'production' ? 
-            shallowClone : deepFreeze(deepClone)
-
         if(isStateDirty) {
-          stateCache = filters.reduce(
-            (s, fn) => fn(s), copy(state))
+          stateCache = copy(state)
           isStateDirty = false
         }
         return stateCache
@@ -70,6 +74,7 @@ export default function({
       mutations[name].apply(this, [state, ...args.slice(1)])
     } else {
       console.error(`${name} is not defined in mutations`)
+      return
     }
 
     isStateDirty = true

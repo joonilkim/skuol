@@ -103,5 +103,8 @@ $border: 2px solid #444;
     textarea {
       resize:none;
     }
+    input:invalid {
+      border:1px solid red;
+    }
   }
 }

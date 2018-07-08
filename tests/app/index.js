@@ -24,7 +24,7 @@ const BoundTodos = Skuol.connect({
 })(Todos, store)
 
 const App = Skuol.createComponent({
-  onrender(){
+  oncreate(){
     this.el.innerHTML = `
       <main>
         <div><!-- jsdom doesnt support form -->
