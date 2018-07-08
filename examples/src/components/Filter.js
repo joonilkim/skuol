@@ -27,6 +27,7 @@ const Filter = Skuol.createComponent({
 
     const onclick = (e) => {
       e.preventDefault()
+      e.stopPropagation()
       const names = [...this.el.querySelectorAll('[name="assignee[]"]:checked')]
           .map(el => el.value)
       setActiveAssignee(names)

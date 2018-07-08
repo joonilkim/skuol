@@ -3,12 +3,13 @@
 
 * { box-sizing:border-box; }
 html, body { margin:0; }
-aside, main { padding:1em; }
 ul { list-style-type:none; margin:0; padding:0; }
 dd { margin:0; }
 
 
 /* components */
+
+aside, main { margin:1em; }
 
 $border: 2px solid #444;
 
@@ -25,9 +26,10 @@ $border: 2px solid #444;
       min-height:200px;
     }
 
-    .cards.active {
+    .cards.droppable {
       background-color:#eee;
     }
+
   }
 
   > fieldset + fieldset {
@@ -65,10 +67,6 @@ $border: 2px solid #444;
   }
 }
 
-.card.active{
-  margin-top:200px;
-}
-
 .filter {
   .filter-item {
     display:inline-block;
@@ -87,20 +85,19 @@ $border: 2px solid #444;
   overflow-x:hidden;
   overflow-y:auto;
   z-index:1000;
-}
 
-.modal-window{
-  width:480px;
-  margin:200px auto;
-  padding:15px;
-  background-color:white;
-  border:$border;
+  > .modal-window{
+    width:480px;
+    margin:200px auto;
+    padding:15px;
+    background-color:white;
+    border:$border;
 
-  input, textarea {
-    width:calc(100% - 150px);
+    input, textarea {
+      width:calc(100% - 150px);
+    }
+    textarea {
+      resize:none;
+    }
   }
-  textarea {
-    resize:none;
-  }
 }
-

@@ -24,11 +24,17 @@ export default Skuol.createCollection({
     }
 
     this.el.ondragenter = (e) => {
-      this.el.classList.add('active')
+      e.preventDefault()
+      if(!this.el.classList.contains('droppable'))
+        this.ndragentered = 0
+      this.ndragentered++
+
+      this.el.classList.add('droppable')
     }
 
     this.el.ondragleave = (e) => {
-      this.el.classList.remove('active')
+      if(--this.ndragentered) return
+      this.el.classList.remove('droppable')
     }
 
   }

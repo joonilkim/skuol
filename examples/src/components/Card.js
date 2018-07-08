@@ -33,8 +33,8 @@ export default Skuol.createComponent({
 
     this.el.ondragend = (e) => {
       e.target.style.borderColor = null
-      ;[...document.querySelectorAll('.cards.active')].forEach(el =>
-        el.classList.remove('active')
+      ;[...document.querySelectorAll('.cards.droppable')].forEach(el =>
+        el.classList.remove('droppable')
       )
     }
 
