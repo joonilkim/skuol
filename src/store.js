@@ -4,7 +4,9 @@ import { nextTick, deepClone, shallowClone, deepFreeze } from './utils'
  * @param {Object} state
  * @param {Object} actions
  * @param {Object} mutations
- * @param {Function} filter A post processor which runs before notify
+ * @param {Function} filters A list of processors which creates a new exposed state.
+ * filters are applied to the internal state lazily when it requested by store.state or
+ * subscriber.onstate(). A processor's signature is (state) => newState
  */
 export default function({
   state={},

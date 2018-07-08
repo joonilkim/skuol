@@ -45,6 +45,7 @@ export function monkeypatch(...fns){
 }
 
 /**
+ * object version of Array.filter
  * @param {Object|Array} obj
  */
 export function filterObject(obj, fn){

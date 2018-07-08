@@ -9,14 +9,13 @@
     "vue",
     "react"
   ],
-  "author": "Joonil Kim <jkim25d@gmail.com>",
+  "author": "Joonil Kim <somewehr@gmail.com>",
   "license": "MIT",
   "main": "src/index.js",
   "files": [
     "src"
   ],
   "scripts": {
-    "build": "npx webpack",
     "test": "jest"
   },
   "devDependencies": {

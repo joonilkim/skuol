@@ -67,6 +67,10 @@ $border: 2px solid #444;
   }
 }
 
+.card.dragging {
+  border-color: #ccc;
+}
+
 .filter {
   .filter-item {
     display:inline-block;

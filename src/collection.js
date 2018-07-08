@@ -1,7 +1,7 @@
 import { assert, empty, shallowEqual, monkeypatch } from './utils'
 import createComponent from './component'
 
-function defaultComparator(a, b){
+function cmp(a, b){
   return a === b ? 0 : (a > b ? 1 : -1)
 }
 
@@ -21,7 +21,7 @@ export default function({
   is,
   component,
   id='id',
-  comparator=defaultComparator,
+  comparator=cmp,
   oncreate=Function(),
   onrender=Function()
 }={}){

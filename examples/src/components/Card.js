@@ -28,11 +28,11 @@ export default Skuol.createComponent({
     this.el.ondragstart = (e) => {
       e.dataTransfer.setData('text/plain', this.model.id)
       e.dataTransfer.dropEffect = 'move'
-      e.target.style.borderColor = 'blue'
+      e.currentTarget.classList.add('dragging')
     }
 
     this.el.ondragend = (e) => {
-      e.target.style.borderColor = null
+      e.currentTarget.classList.remove('dragging')
       ;[...document.querySelectorAll('.cards.droppable')].forEach(el =>
         el.classList.remove('droppable')
       )
