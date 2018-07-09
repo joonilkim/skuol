@@ -8,13 +8,12 @@ const store = new Skuol.Store({
     todos: []
   },
   /* actions can be omitted */
-  mutations: {
+  commits: {
     addTodo(state, name){
-      const item = {id: ++state.counter, name}
-      state.todos = [...state.todos, item]
+      state.todos = [...state.todos, {id: ++state.counter, name}]
     },
     removeTodo(state, { todo }) {
-      state.todos.filter(t => t !== todo)
+      state.todos = filter(t => t !== todo)
     }
   }
 })

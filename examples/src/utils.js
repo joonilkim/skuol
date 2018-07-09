@@ -16,9 +16,14 @@ export function shallowEqual(o1, o2){
     k1.findIndex(k => o1[k] !== o2[k]) < 0
 }
 
-export function shallowArrayEqual(a, b){
-  return a.length === b.length &&
-      a.findIndex((m, i) => !shallowEqual(m, b[i])) < 0
+export function deepEqual(o1, o2){
+  if(o1 == null || o2 == null || 
+      typeof o1 !== 'object' || typeof o2 !== 'object')
+    return o1 === o2
+
+  const [k1, k2] = [Object.keys(o1), Object.keys(o2)]
+  return k1.length === k2.length &&
+    k1.findIndex(k => !deepEqual(o1[k], o2[k])) < 0
 }
 
 /* not implemented yet */

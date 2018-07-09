@@ -1,9 +1,7 @@
-import { shallowEqual } from './utils'
-
 /**
  * @param {String} tagName
  * @param {String} className
- * @param {Function} is
+ * @param {Function} shouldUpdate (data) => boolean, default: this.model === data
  * @param {Function} oncreate
  * @param {Function} onrender
  * This function can be called multiple times. So use this.el.onclick() instead of 
@@ -12,10 +10,12 @@ import { shallowEqual } from './utils'
 export default function({
   tagName='div',
   className,
-  is,
+  shouldUpdate,
   oncreate=Function(),
   onrender=Function()
 }={}){
+
+  shouldUpdate = shouldUpdate || function(data){ return data === this.model }
 
   /**
    * @param {Object} data a initial data
@@ -29,14 +29,14 @@ export default function({
     this.el = document.createElement(tagName)
     if(className) this.el.className = className
     this.model = data
-    this.is = is || function(model){ return shallowEqual(this.model, model) }
 
     const render = onrender.bind(this)
 
+    // this wouldn't try to render if newModel === oldModel
     this.update = (newModel) => {
       const old = this.model
       this.model = newModel
-      if(this.is(old)) return  // no changes
+      if(shouldUpdate.call(this, old)) return
       render(props)
     }
 

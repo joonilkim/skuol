@@ -1,11 +1,8 @@
 import Skuol from 'skuol'
 import store from '../store'
-import { shallowArrayEqual, escape } from '../utils'
+import { deepEqual, escape } from '../utils'
 
 const Filter = Skuol.createComponent({
-  is(model){
-    return shallowArrayEqual(this.model, model)
-  },
   onrender({ setActiveAssignee }){
     const createChild = function(data){
       const el = document.createElement('li')
@@ -47,8 +44,8 @@ const Filter = Skuol.createComponent({
 })
 
 export default Skuol.connect({
-  select: state => ( state.assignee ),
-  storeToProps: ({dispatch}) => ({
-    setActiveAssignee: names => dispatch('setActiveAssignee', names)
-  })
+  select(state){ return state.assignee },
+  storeToProps({dispatch}){
+    return { setActiveAssignee: names => dispatch('setActiveAssignee', names) }
+  }
 })(Filter, store)

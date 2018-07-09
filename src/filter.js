@@ -1,16 +1,15 @@
-/*
- * A function which keeps state and returns cached one if state is same.
- * Because store returns copy of state, if no further mutations, this allows 
- * to avoid recalculation.
+import { shallowEqual } from './utils'
+
+/* returns cached value if possible
  *
  * @param {Function} filter A function which filters state
  */
 export default function(filter=(_=>_)){
   let cached = {}
 
-  return function(state){
-    if(!cached.state || state !== cached.state)
-      cached = {state, value: filter(state)}
+  return function(...data){
+    if(!cached.data || !shallowEqual(data, cached.data))
+      cached = {data, value: filter(...data)}
 
     return cached.value
   }

@@ -6,7 +6,8 @@ import { TODO, INPROGRESS, DONE } from '../store'
 
 export default Skuol.connect({
   select: state => ( 
-    activeCards(state).filter(c => c.status === DONE)
+    activeCards(state.cards, state.assignee)
+        .filter(c => c.status === DONE)
   ),
   storeToProps: ({dispatch}) => ({
     moveCard: cardId => dispatch('moveCard', cardId, DONE)

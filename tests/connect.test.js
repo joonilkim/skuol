@@ -17,7 +17,7 @@ test('should inject $store', async function(){
 test('should change store\'s subscriptions', async function(){
   const store = new Skuol.Store({
     state: {},
-    mutations: {
+    commits: {
       test(){}
     }
   })

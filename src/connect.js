@@ -1,4 +1,4 @@
-import { monkeypatch } from './utils'
+import { monkeypatch, shallowEqual } from './utils'
 
 const unmounted = function(el){
   while(el.parentNode)
@@ -11,15 +11,18 @@ const unmounted = function(el){
  * Ignores component's data property. Initial component.model is select(store.state)
  *
  * @param {Function} select A function which transform state to this.model
+ * @param {Function} isEqual default is shallowEqual
  * @param {Function} storeToProps A function which returns props of onrender
  * ({state, dispatch}) => {}
  */
 export default function({
   select,
+  isEqual,
   storeToProps=(_=>{})
 }={}){
 
   select = select || function(){ return this.model }
+  isEqual = isEqual || function(data){ return shallowEqual(this.model, data) }
 
   return function(Component, store){
 
@@ -29,7 +32,13 @@ export default function({
         if(unmounted(this.el)){
           unsub()
         } else {
-          this.update(select.call(this, state))
+          const selected = select.call(this, state)
+
+          // shallowEqual because select() can return wrapped object.
+          // Plus, commits can generate wrapped object which have unchanged values.
+          // e.g. state.x = state.x.filter(...)
+          if(isEqual.call(this, selected)) return
+          this.update(selected)
         }
       })
       // this should be created before onrender is called

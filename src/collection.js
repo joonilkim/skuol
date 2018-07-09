@@ -1,4 +1,4 @@
-import { warning, shallowEqual, monkeypatch } from './utils'
+import { warning, monkeypatch } from './utils'
 import createComponent from './component'
 
 function cmp(a, b){
@@ -8,20 +8,20 @@ function cmp(a, b){
 /**
  * @param {String} tagName
  * @param {String} className
- * @param {Function} is
  * @param {Function} component A function to return item instance
  * @param {String} id An unique key of item
  * @param {Function} comparator A comparator for sorting
+ * @param {Function} shouldUpdate (data) => boolean, default: this.model === data
  * @param {Function} oncreate
  * @param {Function} onrender
  */
 export default function({
   tagName,
   className,
-  is,
   component,
   id='id',
   comparator=cmp,
+  shouldUpdate,
   oncreate=Function(),
   onrender=Function()
 }={}){
@@ -32,12 +32,6 @@ export default function({
   if(typeof onrender !== 'function')
     throw new Error(`expected a function, but got ${typeof onrender}`)
 
-  is = is || function(model){
-    this.model.length === model.length &&
-    this.model.findIndex(
-      (m, i) => !shallowEqual(m, model[i])) < 0
-  }
-
   oncreate = monkeypatch(function(){
     // init this.model if no data is provided
     this.model = Array.isArray(this.model) ? this.model : []
@@ -47,7 +41,7 @@ export default function({
   return createComponent({
     tagName,
     className,
-    is,
+    shouldUpdate,
     oncreate,
     onrender(props){
 
@@ -67,10 +61,10 @@ export default function({
 
       const upsert = (data) => {
         // data sync안된경우 id 없을 수 있음
-        // update안됐을 수 있기 때문에 component.is(data)로 찾으면 안됨
+        // update안됐을 수 있기 때문에 model === data로 찾으면 안됨
         const c = this._components.find(c => c.model[id] === data[id])
         if(!c) return createComponent(data)  // inserted
-        if(!c.is(data)) c.update(data)     // updated
+        if(c.model !== data) c.update(data)     // updated
         return c
       }
       const components = this.model.map(upsert)

@@ -1,35 +1,37 @@
 import { 
+  env,
+  debug,
   monkeypatch,
-  nextTick, 
-  deepClone, 
-  shallowClone, 
+  nextTick,
+  copy,
   deepFreeze
 } from './utils'
 
 
 // state를 외부에서 수정할 경우, 강제로 error발생케 하기 위해 freeze
-const copy = process.env.NODE_ENV === 'production' ? 
-    ( (o) => Object.freeze(shallowClone(o)) ) :
-    ( (o) => deepFreeze(deepClone(o)) )
+const freeze = env === 'production' ? Object.freeze : deepFreeze
 
 
 /**
  * @param {Object} state
  * @param {Object} actions
- * @param {Object} mutations
+ * @param {Object} commits
  */
 export default function({
   state={},
   actions={},
-  mutations={}
+  commits={}
 }={}){
 
-  state = Object.seal(state)  // prevents property insert/delete
+  if(typeof state !== 'object')
+    throw new Error(`expected object, but got ${typeof state}`)
+
+  state = deepFreeze(state)
   this._subs = []
 
   this.subscribe = (fn) => { 
     if(typeof fn !== 'function')
-      throw new Error(`expected a function, but got ${typeof fn}`)
+      throw new Error(`expected function, but got ${typeof fn}`)
 
     if(this._subs.indexOf(fn) < 0) this._subs.push(fn) 
     return () => {
@@ -39,16 +41,11 @@ export default function({
   }
 
   let stateCache = null
-  let isStateDirty = true
 
   Object.defineProperties(this, {
     state: {
       get(){ 
-        if(isStateDirty) {
-          stateCache = copy(state)
-          isStateDirty = false
-        }
-        return stateCache
+        return Object.isFrozen(state) ? state: freeze(state)
       }
     }
   })
@@ -58,27 +55,25 @@ export default function({
 
     if(name in actions) {
       actions[name].apply(this, [{ commit }, ...args.slice(1)])
-    } else if(name in mutations) {
+    } else if(name in commits) {
       commit.apply(this, args)
     } else {
-      throw new Error(`actions[${name}] or mutations[${name}] is not defined`)
+      throw new Error(`actions[${name}] or commits[${name}] is not defined`)
     }
   }
-
+  
   const commit = function(...args){
     const name = args[0]
 
-    if(name in mutations){
-      mutations[name].apply(this, [state, ...args.slice(1)])
-    } else {
-      throw new Error(`mutations[${name}] is not defined`)
-    }
+    if(!(name in commits))
+      throw new Error(`commits[${name}] is not defined`)
 
-    isStateDirty = true
+    state = copy(state)
+    commits[name].apply(this, [state, ...args.slice(1)])
+
     notifyToSubscribers()
 
-    if(process.env.NODE_ENV === 'development')
-      console.debug(`committed ${name}`, state)
+    debug(`committed ${name}`, state)
   }
 
   let scheduled = null
