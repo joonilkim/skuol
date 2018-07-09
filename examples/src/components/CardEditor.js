@@ -8,7 +8,7 @@ export default Skuol.createComponent({
 
     const destroy = this.destroy
     this.destroy = () => {
-      document.body.style.overflow = 'auto'
+      document.body.style.overflow = null
       destroy.call(this)
     }
 

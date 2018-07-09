@@ -43,7 +43,7 @@ test('should not allow to mutate state', function(){
     state: {
       obj: {a: 1}
     },
-    mutations: {
+    commits: {
       mutating(state, val){
         state.obj.a += val
       }
