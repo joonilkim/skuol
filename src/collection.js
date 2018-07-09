@@ -27,10 +27,10 @@ export default function({
 }={}){
 
   if(typeof component !== 'function')
-    throw new Error(`expected a function, but got ${typeof component}`)
+    throw new Error(`expected function, but got ${typeof component}`)
 
   if(typeof onrender !== 'function')
-    throw new Error(`expected a function, but got ${typeof onrender}`)
+    throw new Error(`expected function, but got ${typeof onrender}`)
 
   oncreate = monkeypatch(function(){
     // init this.model if no data is provided
@@ -64,7 +64,8 @@ export default function({
         // update안됐을 수 있기 때문에 model === data로 찾으면 안됨
         const c = this._components.find(c => c.model[id] === data[id])
         if(!c) return createComponent(data)  // inserted
-        if(c.model !== data) c.update(data)     // updated
+
+        c.update(data)     // updated
         return c
       }
       const components = this.model.map(upsert)
@@ -88,7 +89,7 @@ export default function({
 
       this._components = components
 
-      onrender(props)
+      onrender.call(this, props)
     }
   })
 

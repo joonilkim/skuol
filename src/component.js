@@ -37,6 +37,7 @@ export default function({
       const old = this.model
       this.model = newModel
       if(shouldUpdate.call(this, old)) return
+
       render(props)
     }
 

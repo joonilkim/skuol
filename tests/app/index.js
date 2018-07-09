@@ -23,7 +23,7 @@ const BoundTodos = Skuol.connect({
 })(Todos, store)
 
 const App = Skuol.createComponent({
-  oncreate(){
+  oncreate({ dispatch }){
     this.el.innerHTML = `
       <main>
         <div><!-- jsdom doesnt support form -->
@@ -45,7 +45,7 @@ const App = Skuol.createComponent({
 
     this.el.querySelector('button').addEventListener('click', () => {
       const name = this.el.querySelector('input[name=name]').value
-      this.$store.dispatch('addTodo', name)
+      dispatch('addTodo', name)
     })
   }
 })
