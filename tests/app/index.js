@@ -38,10 +38,8 @@ const App = Skuol.createComponent({
       </main>
     `
 
-    this._components = { todos: new BoundTodos() }
-
     const todos = this.el.querySelector('#todos')
-    todos.appendChild(this._components.todos.el)
+    todos.appendChild(new BoundTodos().el)
 
     this.el.querySelector('button').addEventListener('click', () => {
       const name = this.el.querySelector('input[name=name]').value
