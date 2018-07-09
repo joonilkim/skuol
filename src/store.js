@@ -28,10 +28,8 @@ export default function({
   this._subs = []
 
   this.subscribe = (fn) => { 
-    if(typeof fn !== 'function'){
-      console.error(`invalid subscriber: ${fn}`)
-      return
-    }
+    if(typeof fn !== 'function')
+      throw new Error(`expected a function, but got ${typeof fn}`)
 
     if(this._subs.indexOf(fn) < 0) this._subs.push(fn) 
     return () => {
@@ -63,7 +61,7 @@ export default function({
     } else if(name in mutations) {
       commit.apply(this, args)
     } else {
-      console.error(`${name} is not defined in actions or mutations`)
+      throw new Error(`actions[${name}] or mutations[${name}] is not defined`)
     }
   }
 
@@ -73,15 +71,14 @@ export default function({
     if(name in mutations){
       mutations[name].apply(this, [state, ...args.slice(1)])
     } else {
-      console.error(`${name} is not defined in mutations`)
-      return
+      throw new Error(`mutations[${name}] is not defined`)
     }
 
     isStateDirty = true
     notifyToSubscribers()
 
-    if(process.env.NODE_ENV !== 'production')
-      console.debug('state', state)
+    if(process.env.NODE_ENV === 'development')
+      console.debug(`committed ${name}`, state)
   }
 
   let scheduled = null

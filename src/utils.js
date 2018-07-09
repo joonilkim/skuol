@@ -12,8 +12,10 @@ export function shallowEqual(o1, o2){
     k1.findIndex(k => o1[k] !== o2[k]) < 0
 }
 
-export function assert(expr, errorMessage){
-  if(!expr) throw new Error(errorMessage)
+export function warning(msg){
+  if(process.env.NODE_ENV === 'production') return
+  const log = console.warn ? console.warn : console.log
+  log(msg)
 }
 
 export function nextTick(fn){

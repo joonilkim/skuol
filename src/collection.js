@@ -1,4 +1,4 @@
-import { assert, empty, shallowEqual, monkeypatch } from './utils'
+import { warning, shallowEqual, monkeypatch } from './utils'
 import createComponent from './component'
 
 function cmp(a, b){
@@ -26,13 +26,11 @@ export default function({
   onrender=Function()
 }={}){
 
-  if(process.env.NODE_ENV !== 'production'){
-    assert(typeof component === 'function',
-        `required argument: ${component}`)
+  if(typeof component !== 'function')
+    throw new Error(`expected a function, but got ${typeof component}`)
 
-    assert(typeof onrender === 'function',
-        `expected function, but got ${typeof onrender}`)
-  }
+  if(typeof onrender !== 'function')
+    throw new Error(`expected a function, but got ${typeof onrender}`)
 
   is = is || function(model){
     this.model.length === model.length &&
@@ -53,10 +51,9 @@ export default function({
     oncreate,
     onrender(props){
 
-      if(!Array.isArray(this.model)) {
-        console.error(`expected array, but ${typeof this.model}`)
-        return
-      }
+      if(!Array.isArray(this.model))
+        throw new Error(`expected array, but got ${typeof this.model}`)
+
       this.model.sort(comparator)
 
       const createComponent = (data) => {
@@ -64,7 +61,7 @@ export default function({
         if(typeof data === 'object' && id in data) 
           comp.el.dataset.id = data[id]
         else
-          console.warn(`required ${id} property`)
+          warning(`required ${id} property`)
         return comp
       }
 
