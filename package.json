@@ -11,12 +11,16 @@
   ],
   "author": "Joonil Kim <somewehr@gmail.com>",
   "license": "MIT",
-  "main": "src/index.js",
+  "main": "dist/skuol.common.js",
+  "module": "dist/skuol.es.js",
   "files": [
-    "src"
+    "dist"
   ],
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build:es": "NODE_ENV=es rollup -c -o dist/skuol.es.js",
+    "build:cjs": "NODE_ENV=cjs rollup -c -o dist/skuol.common.js",
+    "build": "npm run build:es && npm run build:cjs"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -31,6 +35,7 @@
     "node-sass": "^4.9.0",
     "postcss-loader": "^2.1.5",
     "regenerator-runtime": "^0.12.0",
+    "rollup": "^0.62.0",
     "sass-loader": "^7.0.3",
     "style-loader": "^0.21.0",
     "webpack": "^4.14.0",

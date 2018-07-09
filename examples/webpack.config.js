@@ -14,7 +14,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      skuol: path.resolve(__dirname, '../src')
+      skuol: path.resolve(__dirname, '../dist/skuol.es.js')
     }
   },
 

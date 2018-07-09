@@ -9,6 +9,7 @@ pids
 *.swp
 .sass-cache
 .env
+dist/
 node_modules/
 examples/**/__dist__
 tests/unit/coverage/
