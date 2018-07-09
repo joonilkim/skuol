@@ -28,7 +28,11 @@ export default Skuol.createComponent({
     this.el.ondragstart = (e) => {
       e.dataTransfer.setData('text/plain', this.model.id)
       e.dataTransfer.dropEffect = 'move'
-      this.el.classList.add('dragging')
+
+      // To avoid unintentional flickering, postpones style changes.
+      setTimeout(() => {
+        this.el.classList.add('dragging')
+      }, 0)
     }
 
     this.el.ondragend = (e) => {

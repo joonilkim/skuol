@@ -2,7 +2,7 @@ import Skuol from 'skuol'
 import store from '../store'
 
 export default Skuol.createComponent({
-  className: 'modal-bg',
+  className: '_modal-container',
   oncreate(){
     document.body.style.overflow = 'hidden'
 
@@ -13,7 +13,7 @@ export default Skuol.createComponent({
     }
 
     this.el.innerHTML = `
-      <div class='modal-window'>
+      <div class='editor-content _modal'>
         <form id='editor-form'>
           <h2>New Issue</h2>
           <section>
@@ -44,7 +44,7 @@ export default Skuol.createComponent({
       this.destroy()
     }
 
-    this.el.querySelector('.modal-window').onclick = (e) => e.stopPropagation()
+    this.el.querySelector('.editor-content').onclick = (e) => e.stopPropagation()
 
     this.el.onclick = ondestroy
 

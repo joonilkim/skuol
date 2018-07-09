@@ -1,3 +1,35 @@
 ._oh { overflow:hidden; }
 ._fl { float:left; }
 ._fr { float:right; }
+
+._modal-container {
+  position:fixed;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+
+  padding:0;
+  text-align:center;
+
+  overflow-x:hidden;
+  overflow-y:auto;
+  z-index:1000;
+
+  > ._modal {
+    display:inline-block;
+    text-align:left;
+    vertical-align:middle;
+  }
+
+}
+
+._modal-container:before {
+  content: '';
+  display:inline-block;
+  height:100%;
+  vertical-align:middle;
+  margin-right:-4px;
+}
+
+

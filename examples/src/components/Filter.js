@@ -3,8 +3,6 @@ import store from '../store'
 import { shallowArrayEqual, escape } from '../utils'
 
 const Filter = Skuol.createComponent({
-  tagName: 'ul',
-  className: 'filter',
   is(model){
     return shallowArrayEqual(this.model, model)
   },
@@ -33,12 +31,18 @@ const Filter = Skuol.createComponent({
       setActiveAssignee(names)
     }
 
-    while(this.el.firstChild) 
-      this.el.removeChild(this.el.firstChild)
+    const ul = document.createElement('ul')
+    ul.className = 'filter'
 
     this.model.forEach(assignee =>
-      this.el.appendChild(createChild(assignee))
+      ul.appendChild(createChild(assignee))
     )
+
+    if(this.el.firstChild)
+      this.el.replaceChild(ul, this.el.firstChild)
+    else
+      this.el.appendChild(ul)
+
   }
 })
 
