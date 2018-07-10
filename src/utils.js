@@ -1,12 +1,15 @@
 export const env = process ? process.env.NODE_ENV : 'production'
 
+export function isObject(o){
+  return o != null && typeof o === 'object'
+}
+
 export function empty(el){
   while(el.firstChild) el.removeChild(el.firstChild)
 }
 
 export function shallowEqual(o1, o2){
-  if(o1 == null || o2 == null ||
-      typeof o1 !== 'object' || typeof o2 !== 'object')
+  if(!isObject(o1) || !isObject(o2))
     return o1 === o2
 
   const [k1, k2] = [Object.keys(o1), Object.keys(o2)]
@@ -33,22 +36,26 @@ export function deepCopy(obj){
 }
 
 export function copy(o){
-  if(typeof o !== 'object') return o
+  if(!isObject(o)) return o
   return Array.isArray(o) ? [...o] : {...o}
 }
 
 export function deepFreeze(o){
+  if(!isObject(o)) return o
+
   Object.freeze(o)
   Object.keys(o).forEach(k => {
-    if(typeof o[k] === 'object') deepFreeze(o[k])
+    deepFreeze(o[k])
   })
   return o
 }
 
 export function deepSeal(o){
+  if(!isObject(o)) return o
+
   Object.seal(o)
   Object.keys(o).forEach(k => {
-    if(typeof o[k] === 'object') deepSeal(o[k])
+    deepSeal(o[k])
   })
   return o
 }
@@ -66,6 +73,8 @@ export function monkeypatch(...fns){
  * @param {Object|Array} obj
  */
 export function filterObject(obj, fn){
+  if(!isObject(obj)) return obj
+
   if(Array.isArray(obj)){
     return obj.filter(fn)
   } else {

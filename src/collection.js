@@ -1,4 +1,4 @@
-import { warning, monkeypatch } from './utils'
+import { isObject, warning, monkeypatch } from './utils'
 import createComponent from './component'
 
 function cmp(a, b){
@@ -52,7 +52,7 @@ export default function({
 
       const createComponent = (data) => {
         const comp = component(data)
-        if(typeof data === 'object' && id in data) 
+        if(isObject(data) && id in data) 
           comp.el.dataset.id = data[id]
         else
           warning(`required ${id} property`)

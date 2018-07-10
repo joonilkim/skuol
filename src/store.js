@@ -1,5 +1,6 @@
 import { 
   env,
+  isObject,
   debug,
   monkeypatch,
   nextTick,
@@ -23,7 +24,7 @@ export default function({
   commits={}
 }={}){
 
-  if(typeof state !== 'object')
+  if(!isObject(state))
     throw new Error(`expected object, but got ${typeof state}`)
 
   state = deepFreeze(state)
