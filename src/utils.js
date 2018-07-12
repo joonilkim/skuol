@@ -1,11 +1,7 @@
-export const env = process ? process.env.NODE_ENV : 'production'
+import { DEBUG } from './globals'
 
 export function isObject(o){
   return o != null && typeof o === 'object'
-}
-
-export function empty(el){
-  while(el.firstChild) el.removeChild(el.firstChild)
 }
 
 export function shallowEqual(o1, o2){
@@ -18,13 +14,15 @@ export function shallowEqual(o1, o2){
 }
 
 export function warning(...msg){
-  if(env === 'production') return
+  if(!DEBUG) return
   if(console.warn) console.warn(...msg)
+  else console.log(...msg)
 }
 
 export function debug(...msg){
-  if(env === 'production') return
+  if(!DEBUG) return
   if(console.debug) console.debug(...msg)
+  else console.log(...msg)
 }
 
 export function nextTick(fn){
@@ -85,4 +83,12 @@ export function filterObject(obj, fn){
       ), {})
   }
 }
+
+export function findIndexFrom(nodes, node, fromIdx=0){
+  for(let i=fromIdx; i<nodes.length; i++)
+    if(nodes[i] === node) return i
+  return -1
+}
+
+
 
