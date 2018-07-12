@@ -19,7 +19,8 @@ import { assertType, assertArray } from './asserts'
 export default function({
   state={},
   actions={},
-  commits={}
+  commits={},
+  storeKey='$store'
 }={}){
 
   assertType(state, 'object')
@@ -27,10 +28,12 @@ export default function({
   state = deepFreeze(state)
   this._subs = []
 
-  this.subscribe = (fn) => { 
+  this.subscribe = function(fn){ 
     assertType(fn, 'function')
 
-    if(this._subs.indexOf(fn) < 0) this._subs.push(fn) 
+    if(this._subs.indexOf(fn) < 0)
+      this._subs.push(fn) 
+
     return () => {
       const i = this._subs.indexOf(fn)
       if(i >= 0) this._subs.splice(i, 1)
@@ -47,7 +50,11 @@ export default function({
     }
   })
 
-  this.dispatch = function(...args){
+  this.install = () => ({
+    [storeKey]: this
+  })
+
+  const dispatch = (...args) => {
     const name = args[0]
 
     if(name in actions) {
@@ -59,8 +66,9 @@ export default function({
       throw new Error(`actions[${name}] or commits[${name}] is not defined`)
     }
   }
+  this.dispatch = dispatch
   
-  const commit = function(...args) {
+  const commit = (...args) => {
     const name = args[0]
 
     if(!(name in commits))

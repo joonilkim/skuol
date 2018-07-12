@@ -1,7 +1,7 @@
 /**
  * @param {String} tagName
  * @param {String} className
- * @param {Function} shouldUpdate (data) => boolean, default: this.model === data
+ * @param {Function} shouldUpdate (newModel) => boolean, default: ===
  * @param {Function} oncreate
  * @param {Function} onrender
  * This function can be called multiple times. So use this.el.onclick() instead of 
@@ -15,7 +15,7 @@ export default function({
   onrender=Function()
 }={}){
 
-  shouldUpdate = shouldUpdate || function(data){ return data === this.model }
+  shouldUpdate = shouldUpdate || function(newModel){ return newModel === this.model }
 
   /**
    * @param {Object} data a initial data
@@ -33,7 +33,7 @@ export default function({
     const render = onrender.bind(this)
 
     // this wouldn't try to render if newModel === oldModel
-    this.update = (newModel) => {
+    this.update = function(newModel) {
       const old = this.model
       this.model = newModel
       if(shouldUpdate.call(this, old)) return
@@ -43,7 +43,7 @@ export default function({
 
     // There're 2 ways to destroy component. 
     // component.destroy() or onrender: component.el.removeChild(child.el)
-    this.destroy = () => {
+    this.destroy = function() {
       if(this.el.parentNode) 
         this.el.parentNode.removeChild(this.el)
     }

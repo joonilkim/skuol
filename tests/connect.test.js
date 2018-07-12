@@ -4,16 +4,6 @@ import App from './app'
 import { nextTick } from './helpers'
 
 
-test('should inject $store', async function(){
-  const store = new Skuol.Store({})
-  const Comp = new Skuol.createComponent({})
-  const BoundComp = Skuol.connect()(Comp, store)
-
-  const comp = new BoundComp()
-  expect(comp).toHaveProperty('$store')
-})
-
-
 test('should change store\'s subscriptions', async function(){
   const store = new Skuol.Store({
     state: {},
@@ -21,6 +11,7 @@ test('should change store\'s subscriptions', async function(){
       test(){}
     }
   })
+
   const Comp = new Skuol.createComponent({})
   const BoundComp = Skuol.connect()(Comp, store)
 
@@ -46,6 +37,26 @@ test('should call lifecycle callbacks', async function(){
 
   new BoundComp()
   expect(callbacks).toEqual(['created', 'rendered'])
+})
+
+
+test('should pass toProps to onrender', function(){
+  let onrenderProps = null
+
+  const store = new Skuol.Store({})
+  const Comp = new Skuol.createComponent({
+    onrender(props){ onrenderProps = props }
+  })
+  const BoundComp = Skuol.connect({
+    toProps({dispatch}){
+      return { myDispatch(){} }
+    }
+  })(Comp, store)
+
+  new BoundComp()
+  expect(onrenderProps).toHaveProperty('myDispatch')
+  expect(typeof onrenderProps.myDispatch).toBe('function')
+
 })
 
 

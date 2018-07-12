@@ -9,7 +9,7 @@ import createComponent from './component'
  * @param {String} className
  * @param {Function} component A function to return item instance
  * @param {String} id An unique key of item
- * @param {Function} shouldUpdate (data) => boolean, default: this.model === data
+ * @param {Function} shouldUpdate (newModel) => boolean, default: ===
  * @param {Function} oncreate
  * @param {Function} onrender
  */
@@ -54,8 +54,8 @@ export default function({
       }
 
       // remove unnecessary nodes
-      const modelIds = new Set(this.model
-        .map((d, i) => isObject(d) ? d[id] : i))
+      const modelIds = new Set(
+          this.model.map((d, i) => isObject(d) ? d[id] : i))
 
       ;[...this.el.children].forEach(child => {
         if(modelIds.has(child._id)) return

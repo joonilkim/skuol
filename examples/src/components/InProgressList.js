@@ -9,7 +9,7 @@ export default Skuol.connect({
     activeCards(state.cards, state.assignee)
         .filter(c => c.status === INPROGRESS)
   ),
-  storeToProps: ({dispatch}) => ({
+  toProps: ({dispatch}) => ({
     moveCard: cardId => dispatch('moveCard', cardId, INPROGRESS)
   })
 })(Cards, store)

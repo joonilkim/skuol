@@ -26,7 +26,7 @@ export function debug(...msg){
 }
 
 export function nextTick(fn){
-  setTimeout.call(this, fn, 0)
+  setTimeout.call(null, fn, 0)
 }
 
 export function deepCopy(obj){

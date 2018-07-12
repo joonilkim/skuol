@@ -1,6 +1,6 @@
 import { shallowEqual } from './utils'
 
-/* 
+/**
  * returns cached value if possible
  * @param {Function} filter A function which filters state
  */

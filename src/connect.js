@@ -7,22 +7,21 @@ const unmounted = function(el){
 }
 
 /**
- * Connects Component and store. Every state changes propagate to component instances.
- * Ignores component's data property. Initial component.model is select(store.state)
- *
+ * Connects Component and Store. Every state changes propagate to 
+ * component instances. Ignores component's data property. Initial 
+ * component.model is select(store.state)
  * @param {Function} select A function which transform state to this.model
  * @param {Function} isEqual default is shallowEqual
- * @param {Function} storeToProps A function which returns props of onrender
+ * @param {Function} toProps A function which transform Store to props
  * ({state, dispatch}) => {}
  */
 export default function({
-  select,
+  select=(_=>_),
   isEqual,
-  storeToProps=(_=>{})
+  toProps=(_=>{})
 }={}){
 
-  select = select || function(){ return this.model }
-  isEqual = isEqual || function(data){ return shallowEqual(this.model, data) }
+  isEqual = isEqual || shallowEqual
 
   return function(Component, store){
 
@@ -32,31 +31,29 @@ export default function({
         if(unmounted(this.el)){
           unsub()
         } else {
-          const selected = select.call(this, state)
+          const selected = select(state)
 
           // shallowEqual because select() can return wrapped object.
           // Plus, commits can generate wrapped object which have unchanged values.
           // e.g. state.x = state.x.filter(...)
-          if(isEqual.call(this, selected)) return
+          if(isEqual(selected, this.model)) return
           this.update(selected)
         }
       })
-      // this should be created before onrender is called
-      this.$store = store
       
-      // build onrender props from storeToProps
+      // build onrender props from toProps
       const params = arguments[0] || {}
       const props  = {
         ...(params.props || {}),
         dispatch: store.dispatch,
-        ...storeToProps(store)
+        ...toProps(store)
       }
 
       // set initial this.model from select(state)
       // this lets boundComponent to ignore data property
       const args = {
         ...params, 
-        data: select.call(this, store.state),
+        data: select(store.state),
         props
       }
       Component.call(this, args)
