@@ -53,19 +53,18 @@ export default function({
         return comp || createComponent(id, data)
       }
 
-      // remove unnecessary nodes
-      const modelIds = new Set(
-          this.model.map((d, i) => isObject(d) ? d[id] : i))
-
-      ;[...this.el.children].forEach(child => {
-        if(modelIds.has(child._id)) return
-        this.el.removeChild(child)
-      })
-
-      // insert or update
       const components = {}
       const vnode = new VNode(this.el)
 
+      // remove unnecessary nodes
+      const modelIds = new Set(
+          this.model.map((d, i) => isObject(d) ? d[id] : i))
+      ;[...vnode.children].forEach(child => {
+        if(modelIds.has(child._id)) return
+        vnode.removeChild(child)
+      })
+
+      // insert or update
       this.model.forEach((data, i) => {
         const _id = isObject(data) ? data[id] : i
 
@@ -82,11 +81,6 @@ export default function({
           vnode.swapChild(comp.el, i)
         }
       })
-
-      // remove redundants
-      //while(vnode.children.length > this.model.length) {
-      //  vnode.removeLast()
-      //}
 
       this._components = components
       onrender.call(this, props)

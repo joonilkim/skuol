@@ -5,6 +5,7 @@ import { shallowEqual } from './utils'
  * @param {Function} filter A function which filters state
  */
 export default function(filter=(_=>_)){
+
   let cached = {}
 
   return function(...data){
