@@ -40,8 +40,6 @@ export default function({
     }
   }
 
-  let stateCache = null
-
   Object.defineProperties(this, {
     state: {
       get(){ 

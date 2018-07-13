@@ -13,15 +13,6 @@ export {
 }
 
 
-const filterAssignee = function(cards, activeNames){
-  const names = cards.reduce((y, c) =>
-      [...y, ...c.assignee]
-    , [])
-  return [...new Set(names)]
-    .sort(strcmp)
-    .map(name => ({name, active: activeNames.has(name)}))
-}
-
 const commits = {
   addTodo(state, todo){
     const id = state.cardSerial++

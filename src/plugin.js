@@ -9,11 +9,14 @@ export function install(pluggable){
   const props = pluggable.install()
   Object.keys(props).forEach(name =>
     Object.defineProperty(
-        Plugged.prototype, name, { value: props[name] })
+        Plugged.prototype, 
+        name, 
+        { value: props[name], configurable: true }
+    )
   )
 
   return function(){
-    Object.keys(props).forEach(name =>
+    Object.getOwnPropertyNames(props).forEach(name =>
       delete Plugged.prototype[name]
     )
   }

@@ -1,11 +1,13 @@
+import { Plugged } from './plugin'
+
 /**
  * @param {String} tagName
  * @param {String} className
  * @param {Function} shouldUpdate (newModel) => boolean, default: ===
  * @param {Function} oncreate
  * @param {Function} onrender
- * This function can be called multiple times. So use this.el.onclick() instead of 
- * this.el.addEventListener() in onrender or attach those events in oncreate
+ * This function can be called multiple times. So use this.el.onclick instead of 
+ * this.el.addEventListener() or attach those events in oncreate
  */
 export default function({
   tagName='div',
@@ -21,7 +23,7 @@ export default function({
    * @param {Object} data a initial data
    * @param {Object} props Properties to pass to onrender
    */
-  return function({
+  const Component = function({
     data={},
     props={}
   }={}){
@@ -52,5 +54,9 @@ export default function({
     render(props)
 
   }
+  Component.prototype = Object.create(Plugged.prototype)
+  Component.prototype.constructor = Component
+
+  return Component
 
 }

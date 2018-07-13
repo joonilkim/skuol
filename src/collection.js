@@ -7,7 +7,7 @@ import createComponent from './component'
 /**
  * @param {String} tagName
  * @param {String} className
- * @param {Function} component A function to return item instance
+ * @param {Function} component A function which returns child component
  * @param {String} id An unique key of item
  * @param {Function} shouldUpdate (newModel) => boolean, default: ===
  * @param {Function} oncreate
