@@ -5,7 +5,7 @@ test('should call lifecycle callbacks', function(){
   const callbacks = []
 
   const Comp = new Skuol.createCollection({
-    component(){ return null },
+    component: Function(),
     oncreate(){ callbacks.push('created') },
     onrender(){ callbacks.push('rendered') }
   })
@@ -18,9 +18,7 @@ test('should call lifecycle callbacks', function(){
 test('should release its children', function(){
   const Child = Skuol.createComponent()
   const Comp = Skuol.createCollection({
-    component(data){
-      return new Child({data})
-    }
+    component: Child
   })
 
   const comp = new Comp({data: [1, 2]})

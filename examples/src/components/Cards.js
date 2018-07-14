@@ -4,9 +4,7 @@ import Card from './Card'
 export default Skuol.createCollection({
   tagName: 'ul',
   className: 'cards',
-  component(data){
-    return new Card({data})
-  },
+  component: Card,
   comparator(a, b){
     return a.sortKey - b.sortKey
   },

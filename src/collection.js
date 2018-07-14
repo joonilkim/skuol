@@ -3,16 +3,11 @@ import { assertType, assertArray } from './asserts'
 import VNode from './vnode'
 import createComponent from './component'
 
-const unmounted = function(el){
-  while(el.parentnode)
-    el = el.parentnode
-  return el !== document
-}
 
 /**
  * @param {String} tagName
  * @param {String} className
- * @param {Function} component A function which returns child component
+ * @param {Component} component A class which can be a collection's item
  * @param {String} id An unique key of item
  * @param {Function} shouldUpdate (newModel) => boolean, default: ===
  * @param {Function} oncreate
@@ -47,7 +42,7 @@ export default function({
       assertArray(this.model)
 
       const createComponent = (id, data) => {
-        const comp = component(data)
+        const comp = new component({data, props})
         comp.el._id = id
         return comp
       }
@@ -58,12 +53,15 @@ export default function({
         return comp || createComponent(id, data)
       }
 
+      const getId = (o, orValue) => (
+        o.hasOwnProperty(id) ? o[id] : orValue
+      )
+
       const components = {}
       const vnode = new VNode(this.el)
 
       // remove unnecessary nodes
-      const modelIds = new Set(
-          this.model.map((d, i) => isObject(d) ? d[id] : i))
+      const modelIds = new Set(this.model.map(getId))
       ;[...vnode.children].forEach(child => {
         if(modelIds.has(child._id)) return
         vnode.removeChild(child)
@@ -71,7 +69,7 @@ export default function({
 
       // insert or update
       this.model.forEach((data, i) => {
-        const _id = isObject(data) ? data[id] : i
+        const _id = getId(data, i)
 
         const comp = upsert(_id, data)
         components[_id] = comp
@@ -79,7 +77,7 @@ export default function({
         let src = vnode.children[i]
         if(src == null) 
           return vnode.appendChild(comp.el)
-        if(comp.el === src) return
+        if(comp.el._id === src._id) return
         
         if(!vnode.hasChild(comp.el)) {
           vnode.insertBefore(comp.el, i)

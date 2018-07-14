@@ -40,7 +40,7 @@ export default function({
 
           // shallowEqual because select() can return wrapped object.
           // Plus, commits can generate wrapped object which have unchanged values.
-          // e.g. state.x = state.x.filter(...)
+          // e.g. (data) => data.map(...)
           if(isEqual(selected, this.model)) return
           this.update(selected)
         }

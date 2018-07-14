@@ -20,7 +20,7 @@ export default function(el){
   const findIndex = function(node, fromIdx=0){
     if(!indexes[node._id]) return -1
     for(let i=fromIdx; i<children.length; i++)
-      if(children[i] === node) return i
+      if(children[i]._id === node._id) return i
     return -1
   }
 
