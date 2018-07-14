@@ -12,8 +12,10 @@ test('should change store\'s subscriptions', async function(){
     }
   })
 
+  const uninstall = Skuol.install(store)
+
   const Comp = new Skuol.createComponent({})
-  const BoundComp = Skuol.connect()(Comp, store)
+  const BoundComp = Skuol.connect()(Comp)
 
   const comp = new BoundComp()
   expect(store._subs.length).toBe(1)
@@ -22,6 +24,8 @@ test('should change store\'s subscriptions', async function(){
   await nextTick(100)
 
   expect(store._subs.length).toBe(0)
+
+  uninstall()
 })
 
 
@@ -29,14 +33,18 @@ test('should call lifecycle callbacks', async function(){
   const callbacks = []
 
   const store = new Skuol.Store({})
+  const uninstall = Skuol.install(store)
+
   const Comp = new Skuol.createComponent({
     oncreate(){ callbacks.push('created') },
     onrender(){ callbacks.push('rendered') }
   })
-  const BoundComp = Skuol.connect()(Comp, store)
+  const BoundComp = Skuol.connect()(Comp)
 
   new BoundComp()
   expect(callbacks).toEqual(['created', 'rendered'])
+
+  uninstall()
 })
 
 
@@ -44,6 +52,8 @@ test('should pass toProps to onrender', function(){
   let onrenderProps = null
 
   const store = new Skuol.Store({})
+  const uninstall = Skuol.install(store)
+
   const Comp = new Skuol.createComponent({
     onrender(props){ onrenderProps = props }
   })
@@ -51,12 +61,13 @@ test('should pass toProps to onrender', function(){
     toProps({dispatch}){
       return { myDispatch(){} }
     }
-  })(Comp, store)
+  })(Comp)
 
   new BoundComp()
   expect(onrenderProps).toHaveProperty('myDispatch')
   expect(typeof onrenderProps.myDispatch).toBe('function')
 
+  uninstall()
 })
 
 
@@ -78,5 +89,4 @@ test('should apply state changes to component', async function(){
   const $newTodo = body.querySelector('li:last-child')
   expect($newTodo.textContent).toEqual(data.todo)
 })
-
 

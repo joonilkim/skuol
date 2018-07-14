@@ -1,5 +1,4 @@
 import Skuol from 'skuol'
-import store from '../store'
 
 export default Skuol.createComponent({
   className: '_modal-container',
@@ -58,7 +57,7 @@ export default Skuol.createComponent({
         description: this.el.querySelector('#editor-desc').value,
         assignee: this.el.querySelector('#editor-assignee').value
       }
-      store.dispatch('addTodo', card)
+      this.$store.dispatch('addTodo', card)
 
       this.destroy()
     }

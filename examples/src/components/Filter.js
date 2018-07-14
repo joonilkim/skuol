@@ -1,5 +1,4 @@
 import Skuol from 'skuol'
-import store from '../store'
 import { escape } from '../utils'
 
 const Filter = Skuol.createComponent({
@@ -50,4 +49,4 @@ export default Skuol.connect({
       dispatch('setActiveAssignee', names) 
     }
   })
-})(Filter, store)
+})(Filter)

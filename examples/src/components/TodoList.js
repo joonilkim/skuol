@@ -1,8 +1,7 @@
 import Skuol from 'skuol'
-import store from '../store'
 import Cards from './Cards'
 import { activeCards } from '../filters'
-import { TODO, INPROGRESS, DONE } from '../store'
+import { TODO, INPROGRESS, DONE } from '../constants'
 
 export default Skuol.connect({
   select: state => ( 
@@ -12,4 +11,4 @@ export default Skuol.connect({
   toProps: ({dispatch}) => ({
     moveCard: cardId => dispatch('moveCard', cardId, TODO)
   })
-})(Cards, store)
+})(Cards)

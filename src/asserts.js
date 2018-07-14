@@ -1,6 +1,6 @@
 export function assert(expr, msg){
   if(!expr)
-    throw new Error(o)
+    throw new Error(msg)
 }
 
 export function assertArray(obj){

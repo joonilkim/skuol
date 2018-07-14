@@ -1,5 +1,4 @@
 import Skuol from 'skuol'
-import store from '../store'
 import { escape } from '../utils'
 
 export default Skuol.createComponent({
@@ -22,7 +21,7 @@ export default Skuol.createComponent({
     `
 
     this.el.querySelector('.card-del').onclick = () => {
-      store.dispatch('removeCard', this.model)
+      this.$store.dispatch('removeCard', this.model)
     }
 
     this.el.ondragstart = (e) => {

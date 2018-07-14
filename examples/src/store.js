@@ -1,16 +1,5 @@
 import Skuol from 'skuol'
-import { strcmp } from './utils'
-
-
-const TODO = 0
-const INPROGRESS = 1
-const DONE = 2
-
-export {
-  TODO,
-  INPROGRESS,
-  DONE
-}
+import { TODO, INPROGRESS, DONE } from './constants'
 
 
 const commits = {

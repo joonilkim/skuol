@@ -17,7 +17,8 @@ export default function({
   onrender=Function()
 }={}){
 
-  shouldUpdate = shouldUpdate || function(newModel){ return newModel === this.model }
+  shouldUpdate = shouldUpdate || 
+      function(newModel){ return newModel === this.model }
 
   /**
    * @param {Object} data a initial data

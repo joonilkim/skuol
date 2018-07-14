@@ -1,4 +1,5 @@
 import { monkeypatch, shallowEqual } from './utils'
+import { assert } from './asserts'
 
 const unmounted = function(el){
   while(el.parentNode)
@@ -23,11 +24,15 @@ export default function({
 
   isEqual = isEqual || shallowEqual
 
-  return function(Component, store){
+  return function(Component, storeKey='$store'){
 
     const BoundComponent = function(){
+      const store = this[storeKey]
+      assert(store != null, 
+          `store[${storeKey}] is not installed. ` +
+          `Have you installed store?`)
 
-      const unsub = store.subscribe((state) => {
+      const unsub = store.subscribe(state => {
         if(unmounted(this.el)){
           unsub()
         } else {

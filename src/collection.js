@@ -3,6 +3,11 @@ import { assertType, assertArray } from './asserts'
 import VNode from './vnode'
 import createComponent from './component'
 
+const unmounted = function(el){
+  while(el.parentnode)
+    el = el.parentnode
+  return el !== document
+}
 
 /**
  * @param {String} tagName
@@ -72,7 +77,8 @@ export default function({
         components[_id] = comp
 
         let src = vnode.children[i]
-        if(src == null) return vnode.appendChild(comp.el)
+        if(src == null) 
+          return vnode.appendChild(comp.el)
         if(comp.el === src) return
         
         if(!vnode.hasChild(comp.el)) {

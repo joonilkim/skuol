@@ -1,13 +1,13 @@
 import Skuol from '../../src'
 import Todos from './Todos'
 
+const storeKey = '$testStore'
 
 const store = new Skuol.Store({
   state: {
     counter: 0,
     todos: []
   },
-  /* actions can be omitted */
   commits: {
     addTodo(state, name){
       state.todos = [...state.todos, {id: ++state.counter, name}]
@@ -15,12 +15,15 @@ const store = new Skuol.Store({
     removeTodo(state, { todo }) {
       state.todos = filter(t => t !== todo)
     }
-  }
+  },
+  storeKey
 })
+
+Skuol.install(store)
 
 const BoundTodos = Skuol.connect({
   select(state){ return state.todos }
-})(Todos, store)
+})(Todos, storeKey)
 
 const App = Skuol.createComponent({
   oncreate({ dispatch }){
@@ -48,4 +51,4 @@ const App = Skuol.createComponent({
   }
 })
 
-export default Skuol.connect()(App, store)
+export default Skuol.connect()(App, storeKey)

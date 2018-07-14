@@ -1,11 +1,10 @@
 import Skuol from 'skuol'
-import store from '../store'
-import { TODO, INPROGRESS, DONE } from '../store'
 import TodoList from './TodoList'
 import InProgressList from './InProgressList'
 import DoneList from './DoneList'
 import CardEditor from './CardEditor'
 import Filter from './Filter'
+
 
 export default Skuol.createComponent({
   oncreate(){
