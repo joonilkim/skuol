@@ -26,13 +26,13 @@ export default function({
 
   return function(Component, storeKey='$store'){
 
-    const onconnect = function(component, props){
-      const store = component[storeKey]
+    const BoundComponent = function(){
+      const store = this[storeKey]
       assert(store != null, 
           `component[${storeKey}] is not installed.`)
 
       const unsub = store.subscribe(state => {
-        if(unmounted(component.el)){
+        if(unmounted(this.el)){
           unsub()
         } else {
           const selected = select(state)
@@ -40,22 +40,21 @@ export default function({
           // shallowEqual because select() can return wrapped object.
           // Plus, commits can generate wrapped object which have unchanged values.
           // e.g. (data) => data.map(...)
-          if(isEqual(selected, component.model)) return
-          component.update(selected)
+          if(isEqual(selected, this.model)) return
+          this.update(selected)
         }
       })
-      
-      // convert toProps to component's props
-      Object.assign(props, toProps(store))
+
+      let { data, props } = arguments[0] || {}
+
+      // create a new props
+      props = {...(props || {}), ...toProps(store)}
 
       // set initial this.model from select(state)
       // this lets boundComponent to ignore data property
-      component.model = select(store.state)
-    }
+      data = select(store.state)
 
-    const BoundComponent = function(){
-      this._plugins = [...this._plugins, onconnect]
-      Component.apply(this, arguments)
+      Component.call(this, { data, props })
     }
     BoundComponent.prototype = Object.create(Component.prototype)
     BoundComponent.prototype.constructor = BoundComponent

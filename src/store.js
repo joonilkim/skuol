@@ -48,9 +48,9 @@ export default function({
     }
   })
 
-  this.install = (component, props) => {
-    component[storeKey] = this
-    props.dispatch = dispatch
+  this.install = (Component) => {
+    Component.prototype[storeKey] = this
+    Component.prototype.props.dispatch = dispatch
   }
 
   const dispatch = (...args) => {

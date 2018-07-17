@@ -1,25 +1,6 @@
 import Skuol from '../../src'
 import Todos from './Todos'
-
-const storeKey = '$testStore'
-
-const store = new Skuol.Store({
-  state: {
-    counter: 0,
-    todos: []
-  },
-  commits: {
-    addTodo(state, name){
-      state.todos = [...state.todos, {id: ++state.counter, name}]
-    },
-    removeTodo(state, { todo }) {
-      state.todos = filter(t => t !== todo)
-    }
-  },
-  storeKey
-})
-
-Skuol.install(store)
+import store, { storeKey } from './store'
 
 const BoundTodos = Skuol.connect({
   select(state){ return state.todos }
@@ -52,3 +33,5 @@ const App = Skuol.createComponent({
 })
 
 export default Skuol.connect()(App, storeKey)
+
+export { store }

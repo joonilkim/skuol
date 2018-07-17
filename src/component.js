@@ -1,4 +1,4 @@
-import { Pluggable } from './plugin'
+import { Plugged } from './plugin'
 
 /**
  * @param {String} tagName
@@ -29,6 +29,9 @@ export default function({
     props={}
   }={}){
 
+    // merge Plugged.prototype.props
+    Object.assign(props, this.props)
+
     this.el = document.createElement(tagName)
     if(className) this.el.className = className
     this.model = data
@@ -51,13 +54,11 @@ export default function({
         this.el.parentNode.removeChild(this.el)
     }
 
-    this._plugins.forEach(fn => fn(this, props))
-
     oncreate.call(this, props)
     render(props)
 
   }
-  Component.prototype = Object.create(Pluggable.prototype)
+  Component.prototype = Object.create(Plugged.prototype)
   Component.prototype.constructor = Component
 
   return Component
