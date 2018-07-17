@@ -1,4 +1,4 @@
-import { Plugged } from './plugin'
+import { Pluggable } from './plugin'
 
 /**
  * @param {String} tagName
@@ -51,11 +51,13 @@ export default function({
         this.el.parentNode.removeChild(this.el)
     }
 
+    this._plugins.forEach(fn => fn(this, props))
+
     oncreate.call(this, props)
     render(props)
 
   }
-  Component.prototype = Object.create(Plugged.prototype)
+  Component.prototype = Object.create(Pluggable.prototype)
   Component.prototype.constructor = Component
 
   return Component

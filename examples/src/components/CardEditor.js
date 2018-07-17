@@ -2,7 +2,7 @@ import Skuol from 'skuol'
 
 export default Skuol.createComponent({
   className: '_modal-container',
-  oncreate(){
+  oncreate({ dispatch }){
     document.body.style.overflow = 'hidden'
 
     const destroy = this.destroy
@@ -57,7 +57,7 @@ export default Skuol.createComponent({
         description: this.el.querySelector('#editor-desc').value,
         assignee: this.el.querySelector('#editor-assignee').value
       }
-      this.$store.dispatch('addTodo', card)
+      dispatch('addTodo', card)
 
       this.destroy()
     }

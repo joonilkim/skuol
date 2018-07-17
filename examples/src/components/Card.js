@@ -7,7 +7,7 @@ export default Skuol.createComponent({
   oncreate(){
     this.el.setAttribute('draggable', true)
   },
-  onrender(){
+  onrender({ dispatch }){
     this.el.innerHTML = `
       <button class='card-del'>X</button>
       <dl class='card-item'>
@@ -21,7 +21,7 @@ export default Skuol.createComponent({
     `
 
     this.el.querySelector('.card-del').onclick = () => {
-      this.$store.dispatch('removeCard', this.model)
+      dispatch('removeCard', this.model)
     }
 
     this.el.ondragstart = (e) => {

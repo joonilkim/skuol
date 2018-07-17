@@ -1,23 +1,20 @@
 import { assertType } from './asserts'
 
-export function Plugged(){}
+export function Pluggable(){}
 
-export function install(pluggable){
-  assertType(pluggable, 'object')
-  assertType(pluggable.install, 'function')
+Pluggable.prototype._plugins = []
 
-  const props = pluggable.install()
-  Object.keys(props).forEach(name =>
-    Object.defineProperty(
-        Plugged.prototype, 
-        name, 
-        { value: props[name], configurable: true }
-    )
-  )
+export function install(plugin){
+  assertType(plugin, 'object')
+  assertType(plugin.install, 'function')
 
-  return function(){
-    Object.getOwnPropertyNames(props).forEach(name =>
-      delete Plugged.prototype[name]
-    )
+  const plugins = Pluggable.prototype._plugins
+
+  plugins.push(plugin.install)
+
+  return () => {
+    const i = plugins.indexOf(plugin.install)
+    if(i >= 0) plugins.splice(i, 1)
   }
+
 }
