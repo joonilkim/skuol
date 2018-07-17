@@ -145,7 +145,7 @@ const TodoList Skuol.connect({
 
 ### Advanced - Creating A Plugin
 
-```
+```js
 const MyStore = function(){
   this.install = (component, props) => {
     component['myStoreKey'] = this
