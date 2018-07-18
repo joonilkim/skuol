@@ -235,7 +235,7 @@ Installs a `Plugin`.
 const MyStore = function(){
   this.install = (Component) => {
     // set instance properties
-    Component.prototype.$myStoreKey' = this
+    Component.prototype.$myStoreKey = this
 
     // add lifecycle properties
     Component.prototype.props.myDispatch = function(){}
