@@ -229,7 +229,7 @@ const TodoList Skuol.connect({
 
 Installs a `Plugin`.
 
-1. `Plugin` *({install: Function})*: An install handler receives a `Component`. You can use a `Component.prototype` to inject component-wide properties or `Component.prototype.props` to pass lifecycle callback parameters.
+1. `Plugin` *({install: Function})*: An install handler receives a `Component`. You can use a `Component.prototype` to inject component-wide properties or `Component.prototype.props` to add lifecycle callback parameters.
 
 ```js
 const MyStore = function(){
