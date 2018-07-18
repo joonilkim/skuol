@@ -1,7 +1,7 @@
 {
   "name": "skuol",
   "version": "0.1.3",
-  "description": "A lightweight reactive, state container",
+  "description": "A lightweight state management library for native DOM",
   "keywords": [
     "redux",
     "flux",
