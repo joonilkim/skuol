@@ -109,7 +109,7 @@ const App = Skuol.createComponent({
 
 Creates a `Component` class
 
-1. `shouldUpdate` *(function(model: Object): boolean)*: Called whenever `component.update` is called. Decides whether to call `component.onrender`. The default comparator is ===.
+1. `shouldUpdate` *(function(model: Object): boolean)*: Called whenever `component.update` is called. Decides whether to call `component.onrender`. The default comparator is !==.
 1. `oncreate` *(function(props: Object))*: A lifecycle callback. Called when `Component` instance is created.
 1. `onrender` *(function(props: Object))*: A lifecycle callback. Called when `Component` instance is created or updated.
 

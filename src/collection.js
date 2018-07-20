@@ -9,7 +9,7 @@ import createComponent from './component'
  * @param {String} className
  * @param {Component} component A class which can be a collection's item
  * @param {String} id An unique key of item
- * @param {Function} shouldUpdate (newModel) => boolean, default: ===
+ * @param {Function} shouldUpdate (newModel) => boolean, default: !==
  * @param {Function} oncreate
  * @param {Function} onrender
  */
@@ -56,6 +56,10 @@ export default function({
       const getId = (o, orValue) => (
         o.hasOwnProperty(id) ? o[id] : orValue
       )
+
+      // quick clear
+      if(!this.model.length)
+        this.el.textContent = ''
 
       const components = {}
       const vnode = new VNode(this.el)

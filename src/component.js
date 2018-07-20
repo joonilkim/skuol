@@ -3,7 +3,7 @@ import { Plugged } from './plugin'
 /**
  * @param {String} tagName
  * @param {String} className
- * @param {Function} shouldUpdate (newModel) => boolean, default: ===
+ * @param {Function} shouldUpdate (newModel) => boolean, default: !==
  * @param {Function} oncreate
  * @param {Function} onrender
  * This function can be called multiple times. So use this.el.onclick instead of 
@@ -18,7 +18,7 @@ export default function({
 }={}){
 
   shouldUpdate = shouldUpdate || 
-      function(newModel){ return newModel === this.model }
+      function(newModel){ return newModel !== this.model }
 
   /**
    * @param {Object} data a initial data
@@ -39,11 +39,9 @@ export default function({
     const render = onrender.bind(this)
 
     // this wouldn't try to render if newModel === oldModel
-    this.update = function(newModel) {
-      const old = this.model
-      this.model = newModel
-      if(shouldUpdate.call(this, old)) return
-
+    this.update = function(data) {
+      if(!shouldUpdate.call(this, data)) return
+      this.model = data
       render(props)
     }
 
