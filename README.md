@@ -103,6 +103,12 @@ const App = Skuol.createComponent({
 })
 ```
 
+## Benchmarks
+
+Comparison with Skuol & vanilla js implementation in Stefan Krause's [js-framework-benchmark](https://github.com/krausest/js-framework-benchmark)
+
+![js-framework-benchmark results](benchmark.png)
+
 ## Component
 
 ### createComponent({ tagName='div', className, shouldUpdate, oncreate, onrender })
